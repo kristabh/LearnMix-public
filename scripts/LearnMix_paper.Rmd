@@ -119,7 +119,7 @@ excl_montreal <- read_csv("../data/part_montreal_anon.csv") %>%
 
 ## Method
 
-The methods of Experiment 1 were approved by the [omitted] University Human Research Ethics board. Data were collected between November 2016 and April 2017, and parents provided informed consent prior to their child’s participation. As is common in laboratories that test hard-to-recruit populations such as bilingual children, children participated in a second, separate study, either immediately prior to or following participation in this experiment (the order of the two studies was counterbalanced). The results of that study are not reported here. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
+The methods of Experiment 1 were approved by the [omitted] University Human Research Ethics board (“Monolingual and Bilingual Language Development”; approval #10000493). Data were collected between November 2016 and April 2017, and parents provided informed consent prior to their child’s participation. As is common in laboratories that test hard-to-recruit populations such as bilingual children, children participated in a second, separate study, either immediately prior to or following participation in this experiment (the order of the two studies was counterbalanced). The results of that study are not reported here. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
 
 ### Participants
 
@@ -910,7 +910,7 @@ In Experiment 1, we found that mid-sentence language mixing reduced French-Engli
 
 ## Method
 
-The method of Experiment 2 was approved by the [omitted] Institutional Review Board. Data were collected between March 2017 and January 2018, and parents provided informed consent prior to their child’s participation. As in Experiment 1, participants in Experiment 2 participated in an additional experiment either prior to or after participating in this experiment. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
+The method of Experiment 2 was approved by the [omitted] Institutional Review Board (“Language learning: Sounds, words, and grammar”; approval #7117). Data were collected between March 2017 and January 2018, and parents provided informed consent prior to their child’s participation. As in Experiment 1, participants in Experiment 2 participated in an additional experiment either prior to or after participating in this experiment. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
 
 ### Participants
 
