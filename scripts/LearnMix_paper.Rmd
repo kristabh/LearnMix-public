@@ -119,7 +119,7 @@ excl_montreal <- read_csv("../data/part_montreal_anon.csv") %>%
 
 ## Method
 
-The methods of Experiment 1 were approved by the [omitted] University Human Research Ethics board. Data were collected between November 2016 and April 2017, and parents provided informed consent prior to their child’s participation. As is common in laboratories that test hard-to-recruit populations such as bilingual children, children participated in a second, separate study, either immediately prior to or following participation in this experiment (the order of the two studies was counterbalanced). The results of that study are not reported here. Stimuli, data, and analysis scripts are available via the Open Science Framework at https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
+The methods of Experiment 1 were approved by the [omitted] University Human Research Ethics board (“Monolingual and Bilingual Language Development”; approval #10000493). Data were collected between November 2016 and April 2017, and parents provided informed consent prior to their child’s participation. As is common in laboratories that test hard-to-recruit populations such as bilingual children, children participated in a second, separate study, either immediately prior to or following participation in this experiment (the order of the two studies was counterbalanced). The results of that study are not reported here. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
 
 ### Participants
 
@@ -152,7 +152,7 @@ Auditory stimuli were recorded in a child-directed manner by a female native bil
 
 During the learning phase, each auditory stimulus consisted of a carrier phrase (“Look! Do you see the…” or *“Regarde! Vois-tu le…”*) that was followed by a familiar target word (bunny, dog, or fish) and a novel target word. Each sentence then labeled one of the animals and its corresponding novel object, such that children had to process the familiar word in order to determine the referent of the novel word. Stimuli were produced naturalistically, in either a single-language context where the carrier phrase, familiar target word, and novel target word were in the same language (e.g., “Look! Do you see the dog on the teelo?” or *“Regarde! Vois-tu le chien sur le tileau?”*), or in a mixed-language context where the familiar word was in a different language from the carrier phrase and the target novel word (e.g., “Look! Do you see the *chien* on the teelo?” or “*Regarde! Vois-tu le* dog *sur le tileau?*”). The familiar word was always pronounced with the phonology of the language it appeared in; “dog” was pronounced with an English accent, and *“chien”* was pronounced with a French accent. The target novel word was always pronounced with the phonology of the carrier phrase language.
 
-During the test phrase, auditory stimuli consisted of simple sentences that directed children’s attention to a target novel object. Sentences during this phase were all in either English (e.g., “Can you find the teelo/walem?") or French (e.g., *"Peux-tu trouver le tileau/walème?"*), depending on which language corresponded to the carrier phrase that the child encountered during training.
+During the test phrase, auditory stimuli consisted of simple sentences that directed children’s attention to a target novel object. Sentences during this phase were all in either English (e.g., “Can you find the teelo/walem?") or French (e.g., *"Peux-tu trouver le tileau/walème?"*), depending on which language corresponded to the carrier phrase that the child encountered during the learning phase.
 
 
 ### Procedure
@@ -271,6 +271,7 @@ test_agg_by_stim <- response_window_agg_by_sub_test %>% # Get all the means
         )
 
 test_agg <- response_window_agg_by_sub_test %>% # Get all the means
+  mutate(sentence.type = fct_rev(sentence.type)) %>%
   group_by(sentence.type) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
@@ -294,9 +295,10 @@ test_agg <- response_window_agg_by_sub_test %>% # Get all the means
 ```{r include = FALSE, echo = FALSE}
 ## TEST FRENCH-ENGLISH: Run t-tests for phase by trial type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
 
-(test_paired <- response_window_agg_by_sub_test %>%
+test_paired <- response_window_agg_by_sub_test %>%
+     mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
-  mutate(cohen_d = statistic/sqrt(parameter +1)))
+  mutate(cohen_d = statistic/sqrt(parameter +1))
 ```
 
 
@@ -326,6 +328,7 @@ test_dom_means <- response_window_agg_by_sub_test %>% # Get all the means
 
 
 dom_t_test <- response_window_agg_by_sub_test %>%
+  mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
   group_by(carrier.dominant) %>%
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1))
@@ -431,18 +434,18 @@ test_figure <- test_agg %>%
 
 A two-tailed paired-samples *t*-test indicated that children looked significantly longer at the target object when its label had been encountered in single-language sentences [*M* = `r test_agg$target.mean[2]`, *SD* = `r test_agg$target.sd[2]`] than when its label had been encountered in mixed-language sentences [*M* = `r test_agg$target.mean[1]`, *SD* = `r test_agg$target.sd[1]`, *t*(`r test_paired$parameter`) = `r round(test_paired$statistic,2) `, *p* = `r round(test_paired$p.value, 2)`, *d* = `r round(test_paired$cohen_d,2)`]. Children's looking to the target novel object was significantly above chance (.5) when its label had been heard in single-language sentences, [*t*(`r test_chance$parameter[2]`) = `r test_chance$statistic[2] `, *p* = `r test_chance$p.value[2]`, *d* = `r test_chance$cohen_d[2]`], indicating successful recognition. However, child's looking to the target novel object was not  significantly above (or below) chance when its label had been heard in mixed-language sentences, [*t*(`r test_chance$parameter[1]`) = `r test_chance$statistic[1] `, *p* = `r test_chance$p.value[1]`, *d* = `r test_chance$cohen_d[1]`], indicating lack of successful recognition. Together, these results suggest that mid-sentence mixing of an informative familiar word can block three-year-olds’ learning of a novel word that follows moments later. Results are illustrated in Figure \@ref(fig:test-figure).
 
-```{r test-figure, include = TRUE, fig.cap = "Proportion looking to target objects for French-English bilinguals."}
+```{r test-figure, include = TRUE, fig.cap = "Proportion looking to target objects for French-English bilinguals (Experiment 1)."}
 
 test_figure
 
 ```
 
 
-We also investigated whether or not the direction of the language switch during training (e.g., dominant to non-dominant language, or vice-versa) affected children's performance at test. Thus, we compared groups of children who heard the main carrier phrase in their dominant versus non-dominant language. Note that this analysis was exploratory, given the reduced sample size of the subgroups (dominant: *n* = `r length(which(part_montreal$carrier.dominant == "dominant"))`; non-dominant: *n* = `r length(which(part_montreal$carrier.dominant == "non-dominant"))`). A 2 (sentence type: single, mixed) x 2 (carrier language: dominant, non-dominant) mixed ANOVA confirmed the significant main effect of sentence type, but there was no significant main effect or interaction with the carrier language (Table \@ref(tab:test-dom-anova-table)). However, follow-up *t*-tests indicated that the main effect of sentence type was statistically significant for the subgroup of children who heard the carrier phrase in their dominant language  [*M*~diff~ = `r -dom_t_test[1,]$estimate`, *t*(`r dom_t_test[1,]$parameter`) = `r round(dom_t_test[1,]$statistic,2) `, *p* = `r round(dom_t_test[1,]$p.value, 2)`, *d* = `r round(dom_t_test[1,]$cohen_d,2)`], but not for the subgroup of children who heard the carrier phrase in their non-dominant language [*M*~diff~ = `r -dom_t_test[2,]$estimate`, *t*(`r dom_t_test[2,]$parameter`) = `r round(dom_t_test[2,]$statistic,2) `, *p* = `r round(dom_t_test[2,]$p.value,2)`, *d* = `r -round(dom_t_test[2,]$cohen_d,2)`]. This provides tentative evidence that word learning was less successful when children had heard a non-dominant word embedded in an otherwise dominant-language sentence, relative to the opposite. That is, hearing a brief switch into the dominant language may not impact subsequent encoding of new words to the same extent as a brief switch into the non-dominant language.
+We also investigated whether or not the direction of the language switch during learning (e.g., dominant to non-dominant language, or vice-versa) affected children's performance at test. Thus, we compared groups of children who heard the main carrier phrase in their dominant versus non-dominant language. Note that this analysis was exploratory, given the reduced sample size of the subgroups (dominant: *n* = `r length(which(part_montreal$carrier.dominant == "dominant"))`; non-dominant: *n* = `r length(which(part_montreal$carrier.dominant == "non-dominant"))`). A 2 (sentence type: single, mixed) x 2 (carrier language: dominant, non-dominant) mixed ANOVA confirmed the significant main effect of sentence type, but there was no significant main effect or interaction with the carrier language (Table \@ref(tab:test-dom-anova-table)). However, follow-up *t*-tests indicated that the main effect of sentence type was statistically significant for the subgroup of children who heard the carrier phrase in their dominant language  [*M*~diff~ = `r dom_t_test[1,]$estimate`, *t*(`r dom_t_test[1,]$parameter`) = `r round(dom_t_test[1,]$statistic,2) `, *p* = `r round(dom_t_test[1,]$p.value, 2)`, *d* = `r round(dom_t_test[1,]$cohen_d,2)`], but not for the subgroup of children who heard the carrier phrase in their non-dominant language [*M*~diff~ = `r dom_t_test[2,]$estimate`, *t*(`r dom_t_test[2,]$parameter`) = `r round(dom_t_test[2,]$statistic,2) `, *p* = `r round(dom_t_test[2,]$p.value,2)`, *d* = `r -round(dom_t_test[2,]$cohen_d,2)`]. This provides tentative evidence that word learning was less successful when children had heard a non-dominant word embedded in an otherwise dominant-language sentence, relative to the opposite. That is, hearing a brief switch into the dominant language may not impact subsequent encoding of new words to the same extent as a brief switch into the non-dominant language.
 
 ```{r test-dom-anova-table, include = TRUE, results = "asis"}
 
-apa_table(dom_anova[1]$ANOVA, digits = 2, caption = "French-English bilinguals: ANOVA for test trials by dominance")
+apa_table(dom_anova[1]$ANOVA, digits = 2, caption = "French-English bilinguals (Experiment 1): ANOVA for test trials by dominance")
 
 ```
 
@@ -602,7 +605,7 @@ dom_anova_training <-  ezANOVA(data = response_window_agg_by_sub_training,
         )
 
 
-apa_table(dom_anova_training[1]$ANOVA, digits = 2, caption = "French–English bilinguals: ANOVA for training trials by dominance")
+apa_table(dom_anova_training[1]$ANOVA, digits = 2, caption = "French-English bilinguals (Experiment 1): ANOVA for learning phase trials by dominance")
 
 
 ```
@@ -680,11 +683,11 @@ We computed the proportion of time that children looked towards each of the four
 
 ```{r training-descriptives-table, echo = FALSE, include = TRUE, results = "asis"}
 
-apa_table(training_agg, digits = 2, caption = "Descriptive statistics for looking times during training phase: French–English bilinguals.")
+apa_table(training_agg, digits = 2, caption = "French-English bilinguals (Experiment 1): Descriptive statistics for looking times during learning phase.")
 
 ```
 
-Proportion looking to the objects was analyzed with a 2 (target type: target, distractor) x 2 (familiarity: familiar, novel) x 2 (trial type: single-language, mixed-language) repeated measures ANOVA. Statistics are displayed in Table \@ref(tab:training-anova-table); note that chance looking is not 0.5, as there were two groups of two objects on the screen. There were significant main effects of familiarity (greater looking at novel than familiar objects) and target type (greater looking at target than distractor objects). There was also a significant interaction between familiarity and target type: looking times to target objects were higher overall, with significantly greater looking to novel than to familiar targets, and looking times to distractor objects were lower overall, with no significant difference in looking to novel vs. familiar distractors. Critically, there were no effects or interactions with trial type, indicating similar patterns of looking across single-language and mixed-language sentences. Across both single-language and mixed-language sentences, children looked significantly longer at the target objects than the distractor objects after hearing the label (*p*s < .05). Visual inspection of time course plots (Figure \@ref(fig:training-timecourse-figure)) confirms that on both single-language and mixed-language sentences, children showed similar increases in looking to the labeled objects after naming. These analyses suggest that language mixing did not affect children’s accuracy in looking to the labeled targets during the training phase.
+Proportion looking to the objects was analyzed with a 2 (target type: target, distractor) x 2 (familiarity: familiar, novel) x 2 (trial type: single-language, mixed-language) repeated measures ANOVA. Statistics are displayed in Table \@ref(tab:training-anova-table); note that chance looking is not 0.5, as there were two groups of two objects on the screen. There were significant main effects of familiarity (greater looking at novel than familiar objects) and target type (greater looking at target than distractor objects). There was also a significant interaction between familiarity and target type: looking times to target objects were higher overall, with significantly greater looking to novel than to familiar targets, and looking times to distractor objects were lower overall, with no significant difference in looking to novel vs. familiar distractors. Critically, there were no effects or interactions with trial type, indicating similar patterns of looking across single-language and mixed-language sentences. Across both single-language and mixed-language sentences, children looked significantly longer at the target objects than the distractor objects after hearing the label  (*p*s < .05). Visual inspection of time course plots (Figure \@ref(fig:training-timecourse-figure)) confirms that on both single-language and mixed-language sentences, children showed similar increases in looking to the labeled objects after naming. These analyses suggest that language mixing did not affect children’s accuracy in looking to the labeled targets during the learning phase.
 
 ```{r training-timecourse-figure, echo = FALSE, include = TRUE, fig.cap = "Timecourse of looking to labeled target for French-English bilinguals (Experiment 1)."}
  
@@ -696,7 +699,7 @@ training_timecourse_figure
 
 ```{r training-anova-table, echo = FALSE, include = TRUE, results = "asis", warning = FALSE, message = FALSE}
 
-apa_table(training_anova[1]$ANOVA, digits = 2, caption = "ANOVA for training trials.")
+apa_table(training_anova[1]$ANOVA, digits = 2, caption = "French-English bilingualsn (Experiment 1): ANOVA for learning trials.")
 
 
 ```
@@ -807,6 +810,7 @@ num_test_trials2 <- response_window_clean_test2 %>%
 ## TEST SPANISH-ENGLISH: Run t-tests for phase by trial type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
 
 (test_paired2 <- response_window_agg_by_sub_test2 %>%
+  mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
   filter(id != "26") %>%
   filter(id != "23") %>%
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
@@ -827,13 +831,12 @@ num_test_trials2 <- response_window_clean_test2 %>%
 ```{r include = FALSE}
 ## TEST SPANISH-ENGLISH: t-tests against chance
 
-(test_chance2 <- response_window_agg_by_sub_test2 %>%
-  filter(id != "26") %>%
-  filter(id != "23") %>%
+test_chance2 <- response_window_agg_by_sub_test2 %>%
+  mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
   group_by(sentence.type) %>%
   do(broom::tidy(t.test(.$Prop , mu = .5, data = .))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1)) %>%
-  mutate_if(is.numeric, funs(signif(., 3))))
+  mutate_if(is.numeric, funs(signif(., 3)))
 
 ```
 
@@ -851,6 +854,7 @@ means_dom_2 <- response_window_agg_by_sub_test2 %>% # Get all the means
 
 
 dom_t_test2 <- response_window_agg_by_sub_test2 %>%
+  mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
   group_by(carrier.dominant) %>%
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1))
@@ -864,7 +868,7 @@ dom_anova2 <-  ezANOVA(data = response_window_agg_by_sub_test2,
         )
 
 
-#apa_table(dom_anova2[1]$ANOVA, digits = 2, caption = "Spanish–English bilinguals: ANOVA for test trials by dominance")
+#apa_table(dom_anova2[1]$ANOVA, digits = 2, caption = "Spanish-English bilinguals (Experiment 2): ANOVA for test trials by dominance")
 
 
 ```
@@ -906,7 +910,7 @@ In Experiment 1, we found that mid-sentence language mixing reduced French–Eng
 
 ## Method
 
-The method of Experiment 2 was approved by the [omitted] Institutional Review Board. Data were collected between March 2017 and January 2018, and parents provided informed consent prior to their child’s participation. As in Experiment 1, participants in Experiment 2 participated in an additional experiment either prior to or after participating in this experiment. Stimuli, data, and analysis scripts are available via the Open Science Framework at   https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf (Anonymized link for peer review).
+The method of Experiment 2 was approved by the [omitted] Institutional Review Board (“Language learning: Sounds, words, and grammar”; approval #7117). Data were collected between March 2017 and January 2018, and parents provided informed consent prior to their child’s participation. As in Experiment 1, participants in Experiment 2 participated in an additional experiment either prior to or after participating in this experiment. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
 
 ### Participants
 
@@ -914,7 +918,8 @@ A total of 21 healthy Spanish–English bilingual children were included in the 
 
 Children had an average age of `r round(mean(part_princeton$age.years),1)` years (range: `r round(min(part_princeton$age.years),1)` – `r round(max(part_princeton$age.years),1)`). There were `r length(which(part_princeton$gender == "male"))` males and `r length(which(part_princeton$gender == "female"))` females. As in Experiment 1, a modified version of the Language Experience and Proficiency Questionnaire [@marian_2007] was used to assess the children’s language background and proficiency. Inclusion criteria and definitions of language dominance were the same as in Experiment 1. There were  `r length(which(part_princeton$child.dom.lang == "English"))` English-dominant children and `r length(which(part_princeton$child.dom.lan == "Spanish"))` Spanish-dominant children. For Spanish, all children were exposed regularly from birth. For English, `r length(which(part_princeton$aoa.L2 == 0))` were exposed regularly from birth (i.e., were simultaneous bilinguals), `r length(which(part_princeton$aoa.L2 > 0 & part_princeton$aoa.L2 < 13))` were exposed after birth but within the first year of life, and `r length(which(part_princeton$aoa.L2 > 13))` were exposed between 12 and `r max(part_princeton$aoa.L2)` months. Another `r nrow(excl_princeton)` children were tested but not included in the final sample due to not meeting pre-established inclusion criteria for bilingual exposure (*n* = `r length(which(excl_princeton$exclusion == "language"))`) or reported language delay (*n* = `r length(which(excl_princeton$exclusion == "speech delay"))`).
 
-As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2013]. The average score in this sample was `r round(mean(part_princeton$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_princeton$lang.mix, na.rm = TRUE),1)` – `r round(max(part_princeton$lang.mix, na.rm = TRUE),1)`. This was not statistically different from the amount of mixing reported by parents in Experiment 1 [`r apa_print(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r cohens_d(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
+As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2014].  The average score in this sample was `r round(mean(part_princeton$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_princeton$lang.mix, na.rm = TRUE),1)` - `r round(max(part_princeton$lang.mix, na.rm = TRUE),1)`). This was not statistically different from the amount of mixing reported by parents in Experiment 1 [`r apa_print(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r cohens_d(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
+
 
 Socioeconomic status was assessed via mothers' highest educational attainment: `r length(which(part_princeton$maternal.education == "graduate"))` had completed a graduate degree, `r length(which(part_princeton$maternal.education == "some_uni"))` had completed some university, `r length(which(part_princeton$maternal.education == "high_school"))` had completed high school, `r length(which(part_princeton$maternal.education == "no_high"))` had not completed high school, and `r sum(is.na(part_princeton$maternal.education))` did not report. That is, among those reporting, 56% of mothers of Spanish–English bilingual children had completed education beyond high school; in contrast, 95% of mothers of French–English bilingual children had done so. Thus, we infer that the sample of Spanish–English bilingual children was of lower socioeconomic status than the sample of French–English bilingual children.
 
@@ -934,7 +939,7 @@ The procedure was similar to Experiment 1. Children sat on their parent’s lap,
 
 Analyses for Experiment 2 were similar to those for Experiment 1, focusing on children’s looking patterns during the 360–2000 ms time window after the object was labeled during the test phase, again excluding trials with less than 750 ms of overall looking during this time window. Children’s proportion of looking to target was averaged across the two test trials of each type. Children completed an average of `r num_test_trials2[[2,2]] ` out of 2 trials testing the novel word that was encountered during single-language sentences in the learning phase (range: `r num_test_trials2[[2,3]] ` – `r num_test_trials2[[2,4]] `) and `r num_test_trials2[[1,2]] ` out of 2 trials testing the novel word that was encountered during mixed-language sentences (range: `r num_test_trials2[[1,3]] ` – `r num_test_trials2[[1,4]] `). Preliminary analyses found no effects of language dominance on the patterns of looking to the target, this factor was not included in subsequent analyses.
 
-Overall, children in Experiment 2 appeared unsuccessful at learning either word, as displayed in Figure \@ref(fig:test-figure2). Two-tailed single-samples *t*-tests showed that children's looking to the target object was not  significantly different from chance (.5) for the novel object heard in single-language sentences, [*M* = `r test_agg2$target.mean[2]`, *SD* = `r test_agg2$target.sd[2]`, *t*(`r test_chance2$parameter[2]`) = `r test_chance2$statistic[2] `, *p* = `r test_chance2$p.value[2]`, *d* = `r test_chance2$cohen_d[2]`] or in mixed-language sentences, [*M* = `r test_agg2$target.mean[1]`, *SD* = `r test_agg$target.sd[1]`, *t*(`r test_chance2$parameter[1]`) = `r test_chance2$statistic[1] `, *p* = `r round(test_chance2$p.value[1], 3)`, *d* = `r test_chance2$cohen_d[1]`].  A two-tailed paired-samples *t*-test confirmed that children showed similar looking to the target novel objects heard in the single-language and mixed-language sentences,[*t*(`r test_paired$parameter`) = `r round(test_paired$statistic,2) `, *p* = `r round(test_paired$p.value, 2)`, *d* = `r round(test_paired$cohen_d,2)`]. 
+Overall, children in Experiment 2 appeared unsuccessful at learning either word, as displayed in Figure \@ref(fig:test-figure2). Two-tailed single-samples *t*-tests showed that children's looking to the target object was not  significantly different from chance (.5) for the novel object heard in single-language sentences, [*M* = `r test_agg2$target.mean[2]`, *SD* = `r test_agg2$target.sd[2]`, *t*(`r test_chance2$parameter[2]`) = `r test_chance2$statistic[2] `, *p* = `r test_chance2$p.value[2]`, *d* = `r test_chance2$cohen_d[2]`] or in mixed-language sentences, [*M* = `r test_agg2$target.mean[1]`, *SD* = `r test_agg$target.sd[1]`, *t*(`r test_chance2$parameter[1]`) = `r test_chance2$statistic[1] `, *p* = `r round(test_chance2$p.value[1], 3)`, *d* = `r test_chance2$cohen_d[1]`].  A two-tailed paired-samples *t*-test confirmed that children showed similar looking to the target novel objects heard in the single-language and mixed-language sentences, [*t*(`r test_paired$parameter`) = `r round(test_paired$statistic,2) `, *p* = `r round(test_paired$p.value, 2)`, *d* = `r round(test_paired$cohen_d,2)`]. 
 
 
 ```{r test-figure2, include = TRUE, fig.cap = "Proportion looking to target object for Spanish-English bilinguals (Experiment 2). Bars represent standard error of the mean."}
@@ -1109,7 +1114,7 @@ dom_anova_training2 <-  ezANOVA(data = response_window_agg_by_sub_training2,
         )
 
 
-apa_table(dom_anova_training2[1]$ANOVA, digits = 2, caption = "Spanish–English bilinguals: ANOVA for training trials by dominance")
+apa_table(dom_anova_training2[1]$ANOVA, digits = 2, caption = "Spanish-English bilinguals (Experiment 2): ANOVA for learning trials by dominance")
 
 
 ```
@@ -1139,7 +1144,7 @@ In these analyses, we investigated whether children’s apparently unsuccessful 
 
 ```{r training-descriptives-table2, echo = FALSE, include = TRUE, results = "asis"}
 
-apa_table(training_agg2, digits = 2, caption = "Descriptive statistics for looking times during training phase: Spanish–English bilinguals.")
+apa_table(training_agg2, digits = 2, caption = "Spanish-English bilinguals (Experiment 2): Descriptive statistics for looking times during learning phase.")
 
 ```
 
@@ -1147,7 +1152,7 @@ apa_table(training_agg2, digits = 2, caption = "Descriptive statistics for looki
 
 A two-tailed, paired-samples *t*-test showed that children's attention to the target was similar for the single-language and mixed-language sentences, [`r apa_print(training_ttest2)$statistic`, *d* = `r cohens_d(training_ttest2)`].  Children's looking to the target side was significantly above chance during both single-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`,`r apa_print(training_ttest_single2)$statistic`, *d* = `r cohens_d(training_ttest_single2)`] and mixed-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`,`r apa_print(training_ttest_mixed2)$statistic`, *d* = `r cohens_d(training_ttest_mixed2)`]. Time course plots shown in Figure \@ref(fig:training-timecourse-figure2) confirm that children showed similar increases in looking to the labeled objects after naming for both trial types. This indicated that language mixing did not affect children’s success in orienting to the labeled object during the learning phase.
 
-```{r training-timecourse-figure2, include = TRUE, fig.cap = "Timecourse of looking to target during training trials for Spanish-English bilinguals"}
+```{r training-timecourse-figure2, include = TRUE, fig.cap = "Timecourse of looking to target during training trials for Spanish-English bilinguals (Experiment 2)."}
 ## TRAINING SPANISH-ENGLISH: Timecourse figure
 
  training_timecourse_figure2 <- response_time_summarized_training2 %>%
@@ -1227,7 +1232,7 @@ apa_table(test_anova_all$ANOVA, digits = 2, caption = "Comparison of French–En
 ```
 
 
-Second, we examined performance during the training phase. A 2 (population: French–English, Spanish–English) x 2 (sentence type: single-language, mixed-language) mixed ANOVA revealed a statistically significant main effect of population, whereby the French–English bilinguals looked to the labeled target with greater accuracy than did the Spanish–English bilinguals (Table \@ref(tab:training-comparison-anova-table)). The main effect of sentence type and the interaction between sentence type and population were not statistically significant. Thus, although both groups did look more to the target objects than the distractor objects during the learning phase, the French–English bilinguals did so more reliably.
+Second, we examined performance during the learning phase. A 2 (population: French-English, Spanish-English) x 2 (sentence type: single-language, mixed-language) mixed ANOVA revealed a statistically significant main effect of population, whereby the French-English bilinguals looked to the labeled target with greater accuracy than did the Spanish-English bilinguals (Table \@ref(tab:training-comparison-anova-table)). The main effect of sentence type and the interaction between sentence type and population were not statistically significant. Thus, although both groups did look more to the target objects than the distractor objects during the learning phase, the French-English bilinguals did so more reliably. 
 
 
 ```{r training-comparison-anova-table, include = TRUE, results = "asis"}
@@ -1279,6 +1284,6 @@ To conclude, the current experiments provide two main contributions to existing 
 
 sample_order <- read_csv("../data/sample_order.csv")
 
-apa_table(sample_order, caption = "Sample trial order for Experiment 1.")
+apa_table(sample_order, caption = "Sample trial order for French-English bilinguals (Experiment 1).")
 
 ```
