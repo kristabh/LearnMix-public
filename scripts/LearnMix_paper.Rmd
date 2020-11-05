@@ -63,17 +63,14 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = FALSE, include = FA
 ```{r load.packages, echo = FALSE}
 ##Loading LearnMix Data
 
-
-## Clean the workspace and set working directory
-rm(list=ls(all=T))
-
 # Load packages
 
 #source("https://install-github.me/noamross/redoc")
 
 #devtools::install_github("crsh/papaja") # Need to have latest version of papaja installed from github
+devtools::install_github("jwdink/eyetrackingR") # if not on CRAN must install from Github
 library("papaja")
-library(eyetrackingR)
+library(eyetrackingR) # Currently does not run under R 4.0.2, run under R 3.6.3
 library(tidyverse) # loads dplyr, ggplot, broom, forcats, etc.
 library(ggridges)
 library(lme4)
@@ -98,7 +95,7 @@ Our experiments used an eye-tracking task with a learning phase and a test phase
 
 Our main prediction was that children would show better learning of the novel word encountered in single-language sentences than in mixed-language sentences. Based on previous findings [@byersh_2017; @potter_2019], we hypothesized that this would be due to a temporary disruption in language processing upon hearing the borrowed word. Specifically, upon hearing a language switch, children would be less able to identify and encode the mapping between the novel label and novel object. This would be evident in children’s behavior during the learning phase, where we predicted that children would spend less time gazing at the target novel object during mixed-language sentences than during single-language sentences.
 
-We also considered several other potential results. First, it is possible that even when language mixing disrupts real-time processing, the uptake of new words is unaffected. Second, it is possible that we would not replicate previously reported effects of language mixing on language comprehension. In this case, we would either find that language mixing does not affect word learning, or that it does affect word learning but via another mechanism. . Finally, considering the population differences noted above, French-English and Spanish-English bilingual children might show different patterns of looking, listening, and learning.
+We also considered several other potential results. First, it is possible that even when language mixing disrupts real-time processing, the uptake of new words is unaffected. Second, it is possible that we would not replicate previously reported effects of language mixing on language comprehension. In this case, we would either find that language mixing does not affect word learning, or that it does affect word learning but via another mechanism. Finally, considering the population differences noted above, French-English and Spanish-English bilingual children might show different patterns of looking, listening, and learning.
 
 ```{r participants-montreal}
 
@@ -301,8 +298,24 @@ test_paired <- response_window_agg_by_sub_test %>%
      mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1))
+
+
 ```
 
+```{r include = FALSE}
+## Robustness test to make sure that three infants who didn't look at the target during test are not driving the results
+
+zero_test <- response_window_agg_by_sub_test %>%
+  filter(Prop == 0) %>%
+  select(id) %>%
+  pull
+
+test_paired_filtered <- response_window_agg_by_sub_test %>%
+  mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
+  filter(!id %in% zero_test) %>%
+  do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
+  mutate(cohen_d = statistic/sqrt(parameter +1))
+```
 
 
 ```{r include = FALSE, echo = FALSE}
@@ -319,8 +332,6 @@ test_chance <- response_window_agg_by_sub_test %>%
 ```{r include = FALSE, echo = FALSE}
 
 ## TEST FRENCH-ENGLISH: Dominance analysis
-
-
 
 test_dom_means <- response_window_agg_by_sub_test %>% # Get all the means
   group_by(sentence.type, carrier.dominant) %>%
