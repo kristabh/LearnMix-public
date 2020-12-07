@@ -68,7 +68,8 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = FALSE, include = FA
 #source("https://install-github.me/noamross/redoc")
 
 #devtools::install_github("crsh/papaja") # Need to have latest version of papaja installed from github
-devtools::install_github("jwdink/eyetrackingR") # if not on CRAN must install from Github
+#devtools::install_github("mariusbarth/papaja@merMod-support") to print lmer models https://github.com/crsh/papaja/issues/154
+#devtools::install_github("jwdink/eyetrackingR") # if not on CRAN must install from Github
 library("papaja")
 library(eyetrackingR) # Currently does not run under R 4.0.2, run under R 3.6.3
 library(tidyverse) # loads dplyr, ggplot, broom, forcats, etc.
@@ -78,6 +79,7 @@ library(corrr) #Good tools for correlations
 library(ez)
 library(apa)
 library(english)
+library(lmerTest)
 
 ```
 
@@ -305,6 +307,7 @@ test_paired <- response_window_agg_by_sub_test %>%
 ```{r include = FALSE}
 ## Robustness test to make sure that three infants who didn't look at the target during test are not driving the results
 
+#ids of infants who did not look to the target at all
 zero_test <- response_window_agg_by_sub_test %>%
   filter(Prop == 0) %>%
   select(id) %>%
@@ -312,7 +315,7 @@ zero_test <- response_window_agg_by_sub_test %>%
 
 test_paired_filtered <- response_window_agg_by_sub_test %>%
   mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
-  filter(!id %in% zero_test) %>%
+  filter(!id %in% zero_test) %>% # remove infants with zero looks
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1))
 ```
@@ -1244,6 +1247,8 @@ apa_table(test_anova_all$ANOVA, digits = 2, caption = "Comparison of French-Engl
 ```
 
 
+
+
 Second, we examined performance during the learning phase. A 2 (population: French-English, Spanish-English) x 2 (sentence type: single-language, mixed-language) mixed ANOVA revealed a statistically significant main effect of population, whereby the French-English bilinguals looked to the labeled target with greater accuracy than did the Spanish-English bilinguals (Table \@ref(tab:training-comparison-anova-table)). The main effect of sentence type and the interaction between sentence type and population were not statistically significant. Thus, although both groups did look more to the target objects than the distractor objects during the learning phase, the French-English bilinguals did so more reliably. 
 
 
@@ -1253,7 +1258,321 @@ apa_table(training_anova_all$ANOVA, digits = 2, caption = "Comparison of French-
 
 ```
 
+## Exploration of individual differences
 
+In this section, we combined datasets from the two populations to explore potential individual differences in performance.
+
+```{r ind-differences-training-test, include = FALSE}
+## French-English relationship between training and test
+
+response_window_agg_by_sub_training_targ <- make_time_window_data(response_window_clean_training, 
+                                                             aois = c('target'), 
+                                                             predictor_columns=c("sentence.type", "population"),
+                                                             summarize_by = c("id"),
+                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+  mutate(AOI = as.factor(AOI)) %>%
+  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target")))
+
+
+training_trials <- response_window_agg_by_sub_training_targ %>%
+  rename(prop_training = Prop) %>%
+  select(id, population, sentence.type, prop_training) %>%
+  as.data.frame()
+
+
+test_trials <- response_window_agg_by_sub_test %>%
+  rename(prop_test = Prop) %>%
+  select(id, sentence.type, prop_test)%>%
+  as.data.frame()
+
+test_training_wide <- training_trials %>%
+  left_join(test_trials)
+
+
+correl_plot <- ggplot(test_training_wide , aes(x = prop_training, y = prop_test)) +
+  geom_point(aes(color = sentence.type)) +
+  geom_smooth(aes(color = sentence.type), method = "lm") +
+  geom_smooth(method = "lm", color = "black")
+
+
+# Overall correlation
+
+cor.mixed <- cor.test(test_training_wide[test_training_wide$sentence.type == "Mixed",]$prop_test, test_training_wide[test_training_wide$sentence.type == "Mixed",]$prop_training)
+cor.single <- cor.test(test_training_wide[test_training_wide$sentence.type == "Single",]$prop_test, test_training_wide[test_training_wide$sentence.type == "Single",]$prop_training)
+
+# lmer French-English
+test_training_model <- lmer(prop_test ~ prop_training*sentence.type + (1|id), data = test_training_wide)
+
+summary(test_training_model)
+
+test_training_model_simpler <- lmer(prop_test ~ prop_training +sentence.type + (1|id), data = test_training_wide)
+
+summary(test_training_model_simpler)
+
+anova(test_training_model, test_training_model_simpler) #Compare the models. Interaction does not significantly improve model fit. 
+
+
+### New Jersey ###
+
+training_trials2 <- response_window_agg_by_sub_training2 %>%
+  rename(prop_training = Prop) %>%
+  select(id, population, sentence.type, prop_training) %>%
+  as.data.frame()
+
+test_trials2 <- response_window_agg_by_sub_test2 %>%
+  rename(prop_test = Prop) %>%
+  select(id, sentence.type, prop_test)%>%
+  as.data.frame()
+
+test_training_wide2 <- training_trials2 %>%
+  left_join(test_trials2)
+
+correl_plot2 <- ggplot(test_training_wide2 , aes(x = prop_training, y = prop_test)) +
+  geom_point(aes(color = sentence.type)) +
+  geom_smooth(aes(color = sentence.type), method = "lm") +
+  geom_smooth(method = "lm", color = "black")
+    
+
+# Overall correlation
+
+cor.mixed2 <- cor.test(test_training_wide2[test_training_wide2$sentence.type == "Mixed",]$prop_test, test_training_wide2[test_training_wide2$sentence.type == "Mixed",]$prop_training)
+cor.single2 <- cor.test(test_training_wide2[test_training_wide2$sentence.type == "Single",]$prop_test, test_training_wide2[test_training_wide2$sentence.type == "Single",]$prop_training)
+
+
+# lmer Spanish-English
+test_training_model2 <- lmer(prop_test ~ prop_training*sentence.type + (1|id), data = test_training_wide2) #interaction with sentence type
+
+summary(test_training_model2)
+
+test_training_model_simpler2 <- lmer(prop_test ~ prop_training +sentence.type + (1|id), data = test_training_wide2) # no interaction with sentence type, only main effects
+
+summary(test_training_model_simpler2)
+
+anova(test_training_model2, test_training_model_simpler2) #Compare the models.  Interaction does not significantly improve model fit
+
+### Two groups combined
+
+test_training_wide_both <- rbind(test_training_wide, test_training_wide2) %>%
+  mutate(sentence.type = fct_rev(sentence.type))
+
+# Figure for relationship between performance at training and at test
+
+comb_correl_plot <- test_training_wide_both %>%
+  ggplot(aes(x = prop_training, y = prop_test)) +
+  geom_point(aes(color = sentence.type, shape = sentence.type)) +
+  geom_smooth(aes(color = sentence.type, lty = sentence.type), method = "lm", se = FALSE) +
+ # geom_smooth(method = "lm", color = "black", se = FALSE) +
+  geom_hline(yintercept = .5, color = "black")+
+  facet_grid(. ~ population) +
+  theme_minimal() +
+  coord_fixed() +
+  labs(y = "Test: Proportion target looking", x ="Training: Proportion target looking") +
+  scale_color_manual(name = "Sentence type", values =c("#377eb8", "#e41a1c"))+
+  scale_linetype(name = "Sentence type") +
+  scale_shape(name = "Sentence type") +
+  theme(axis.text = element_text(size=14),
+        axis.title = element_text(size = 16),
+        strip.text = element_text(size = 14),
+        legend.title = element_text(size = 16),
+        legend.text=  element_text(size = 14),
+        plot.title = element_text(hjust = 0.5, size = 14),
+        panel.background = element_blank(),
+        strip.background = element_blank(),
+        panel.spacing = unit(2, "lines")) +
+      ggtitle("Relationship between training and test performance")
+
+
+## Two group lmer. Conclusions: Infants who do better at training do better test. French-English bilinguals do overall better on single-language trials than Spanish-English
+
+test_training_model_group <- lmer(prop_test ~ prop_training*sentence.type*population + (1|id), data = test_training_wide_both) # full interactions
+
+summary(test_training_model_group)
+
+test_training_model_group_simpler <- lmer(prop_test ~ prop_training + sentence.type*population + (1|id), data = test_training_wide_both) #only interaction between sentence type and population
+
+summary(test_training_model_group_simpler)
+
+anova(test_training_model_group_simpler, test_training_model_group)
+
+```
+
+### Relationship between training and test performance
+
+We examined whether performance at test was predicted by performance during training, exploring whether this relationship was moderated by sentence type (single-language, mixed-language) and population (French-English, Spanish-English). Scatterplots visualizing these relationships are shown in \@ref(fig:correl-figure)). Based on this visualization as well as our previous results, we fit a linear mixed-effects model that included fixed effects of performance during training, sentence type, and population, the interaction between sentence type and population (since French-English but not Spanish-English toddlers showed difference performance by sentence type), as well as random slopes by participants (results are show in in \@ref(tab:lmem)). The reference level for population was French-English bilinguals, and the reference level for sentence type was single-language. The model equation was prop_test ~ prop_training + sentence.type*population + (1|id). 
+
+The analysis revealed a significant main effect of training, revealing that toddlers who performed better during training performed better at test. There was also a significant interaction between sentence type and population, replicating the finding from our previous analysis that French-English bilingual did better on single-language than mixed-language trials than single-language trials but Spanish-English toddlers did similarly on both trial types. This is also reflected in the significant main effect of sentence type, which is interpreted at the reference level of French-English bilinguals. We compared this model to a larger model that included interactions of all predictors, but found no evidence that the more complicated model was a significantly better fit to the data.
+
+
+
+```{r correl-figure, include = TRUE}
+comb_correl_plot
+```
+
+```{r lmem, results = "asis", include = TRUE}
+
+# Creating table for lmem results
+
+Variable <- c("intercept", "proportion target training", "sentence type (Mixed)", "population (Spanish-English)", "sentence type * population")
+
+rownames <- as.data.frame(Variable)
+
+coefs <- summary(test_training_model_group_simpler)$coef %>%
+  as_data_frame %>%
+  mutate_at(c("Estimate","Std. Error","df", "t value", "Pr(>|t|)"), 
+            function (x) signif(x, digits = 3)) %>%
+  rename(SE = `Std. Error`, 
+         t = `t value`,
+         p = `Pr(>|t|)`) %>% 
+  select(-df) %>%
+  as.data.frame()
+
+coefs_table <- bind_cols(rownames, coefs)
+
+
+apa_table(coefs_table, digits = 3, caption = "Linear Mixed Model testing effects of population, sentence type, and performance during training on performance at test.")
+
+
+
+```
+
+
+
+```{r}
+
+# Combined training dataframe - trial by trial
+
+all_clean_training <- bind_rows(response_window_clean_training, response_window_clean_training2)
+
+response_window_agg_by_sub_training_all <- make_time_window_data(all_clean_training, 
+                                                             aois = c('target'), 
+                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix"),
+                                                         #    summarize_by = c("id"),
+                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+  mutate(AOI = as.factor(AOI)) %>%
+  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+  mutate(population = as.factor(population)) %>%
+  mutate(sentence.type = fct_rev(sentence.type))
+```
+
+
+```{r}
+
+# Combined test dataframe - trial by trial
+
+
+all_clean_test <- response_window_clean_test %>%
+  mutate(target = targetnovel) %>%
+  bind_rows( response_window_clean_test2)
+
+response_window_agg_by_sub_test_all <- make_time_window_data(all_clean_test, 
+                                                             aois = c('target'), 
+                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix"),
+                                                         #    summarize_by = c("id"),
+                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+  mutate(AOI = as.factor(AOI)) %>%
+  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+  mutate(population = as.factor(population))
+
+```
+
+```{r}
+
+# Combined training dataframe - by participant
+
+response_window_agg_by_sub_training_sub <- make_time_window_data(all_clean_training, 
+                                                             aois = c('target'), 
+                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix"),
+                                                             summarize_by = c("id"),
+                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+  mutate(AOI = as.factor(AOI)) %>%
+  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+  mutate(population = as.factor(population)) %>%
+  mutate(sentence.type = fct_rev(sentence.type))
+```
+
+
+```{r}
+
+# Combined test dataframe - by participant
+
+response_window_agg_by_sub_test_sub <- make_time_window_data(all_clean_test, 
+                                                             aois = c('target'), 
+                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix"),
+                                                             summarize_by = c("id"),
+                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+  mutate(AOI = as.factor(AOI)) %>%
+  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+  mutate(population = as.factor(population))
+
+```
+
+```{r correlations}
+
+# Correlations with test
+grouped_corr_test <- response_window_agg_by_sub_test_sub %>%
+  group_by(population) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix)
+
+all_corr_test <- response_window_agg_by_sub_test_sub %>%
+  select(-population) %>%
+  mutate(population = "All") %>%
+  group_by(population) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix) %>%
+  bind_rows(grouped_corr_test) %>%
+  mutate(phase = "Test")
+
+# Correlations with training
+grouped_corr_training <- response_window_agg_by_sub_training_sub %>%
+  group_by(population) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix)
+
+all_corr_training <- response_window_agg_by_sub_test_sub %>%
+  select(-population) %>%
+  mutate(population = "All") %>%
+  group_by(population) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix) %>%
+  bind_rows(grouped_corr_training) %>%
+  mutate(phase = "Training")
+  
+# All of the correlations in one dataframe
+all_corr <- bind_rows(all_corr_training, all_corr_test) %>%
+  filter(var1 == "Prop") %>%
+  filter(var2 != "Prop") %>%
+  select(phase, population, var2, cor, p) %>%
+  rename(r = "cor") %>%
+  rename(Variable = "var2") %>%
+    arrange(phase, population, Variable, r, p) %>%
+  mutate(phase = fct_rev(phase)) %>%
+  mutate(population = recode(population, Montreal = "French-English", `New Jersey` = "Spanish-English")) %>%
+  rename(Phase = phase) %>%
+  mutate(Variable = recode(Variable, lang.mix = "language mixing", vocab.dom = "Dominant lang. vocab.", vocab.nondom = "Non-dominant lang. vocab", vocab.total = "Total vocabulary"))
+
+min_corr <- min(all_corr$r)
+max_corr <- max(all_corr$r)
+min_p <- min(all_corr$p)
+n_corr <- nrow(all_corr)
+
+all_corr_wide <- all_corr %>%
+  pivot_wider(id_cols = c(Phase, population, Variable), names_from = population, values_from = c(r), names_sep = " ")
+
+
+
+
+```
+
+### Individual differences
+
+Next, we examined whether performance was vocabulary knowledge (dominant language vocabulary, non-dominant language vocabulary, and total vocabulary) or exposure to language mixing. To fully explore the data, we computed correlations separately for training and test phases, as well as with each population and the whole sample combined. Thus, a total of `r n_corr` different correlations were computed (see Table \@ref(tab:corr-table)). None of the correlations approached statistical significance, even prior to controlling for multiple comparisons (ps >= `r min_p`).
+
+
+```{r corr-table, results = "asis", include = TRUE}
+apa_table(all_corr_wide, caption = "Correlations with proportion target looking.")
+```
 
 
 # General discussion
