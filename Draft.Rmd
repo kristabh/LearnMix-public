@@ -1,0 +1,207 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+# Test: Dominant language vocabulary
+
+#  sentence.type* population. Significant interaction between sentence type and population. Follow-ups confirm a significant effect of sentence type for Montreal but not for New Jersey
+mod1_test <- lmer(Prop -.5 ~  sentence.type*population+ (1|id), data = response_window_agg_by_sub_test_all)
+summary(mod1_test)
+
+mod1_nj_test <- response_window_agg_by_sub_test_all %>%
+  filter(population == "New Jersey") %>%
+  lmer(Prop -.5 ~  sentence.type+ (1|id), data = .)
+summary(mod1_nj_test)
+
+mod1_montreal_test <- response_window_agg_by_sub_test_all %>%
+  filter(population == "Montreal") %>%
+  lmer(Prop -.5 ~  sentence.type+ (1|id), data = .)
+summary(mod1_montreal_test)
+
+
+
+# sentence.type*population with dominant vocabulary. Near-significant three-way interaction. But follow-up shows no relationship
+
+mod2_test <- lmer(Prop ~  sentence.type*population*vocab.dom+ (1|id), data = response_window_agg_by_sub_test_all)
+summary(mod2_test)
+
+mod2_nj_test <- response_window_agg_by_sub_test_all %>%
+  filter(population == "New Jersey") %>%
+  lmer(Prop -.5 ~  sentence.type*vocab.dom+ (1|id), data = .)
+summary(mod2_nj_test)
+
+mod2_montreal_test <- response_window_agg_by_sub_test_all %>%
+  filter(population == "Montreal") %>%
+  lmer(Prop -.5 ~  sentence.type*vocab.dom+ (1|id), data = .)
+summary(mod2_montreal_test)
+
+
+response_window_agg_by_sub_training_all %>% 
+  group_by(id, vocab.dom, sentence.type, population) %>%
+  summarize(Prop = mean(Prop, na.rm = TRUE)) %>%
+  ggplot(aes(x = vocab.dom, y = Prop, fill = sentence.type)) +
+  geom_point() +
+  stat_smooth(method = "lm") +
+#  geom_point(stat = "mean") +
+  facet_grid (. ~ population)
+
+
+
+
+```
+
+
+
+
+```{r}
+
+# Correlations with vocab and language mixing
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+```{r}
+## Training Dominance analysis
+
+
+
+
+response_window_agg_by_sub_training_all %>% 
+  group_by(carrier.dominant, sentence.type, population) %>%
+  summarize(Prop = mean(Prop, na.rm = TRUE)) %>%
+  ggplot(aes(x = carrier.dominant, y = Prop, fill = sentence.type)) +
+  geom_bar(position = "dodge", stat = "identity") +
+#  geom_point(stat = "mean") +
+  facet_grid (. ~ population)
+
+
+# Model with all interactions
+training_dom_model1 <- lmer(Prop ~  sentence.type*carrier.dominant*population + (1|id), data = response_window_agg_by_sub_training_all)
+summary(training_dom_model1)
+
+# Remove 3-way interaction
+training_dom_model2 <- lmer(Prop ~  sentence.type*carrier.dominant + population*carrier.dominant + sentence.type* population + (1|id), data = response_window_agg_by_sub_training_all)
+summary(training_dom_model2)
+
+# compare model 1 and 2.  Fit is not worse
+anova(training_dom_model1, training_dom_model2)
+
+# LMEM for just NJ. No difference between dominant and non-dominant language
+training_dom_model_nj <- response_window_agg_by_sub_training_dom %>%
+  filter(population == "New Jersey") %>%
+  lmer(Prop ~  sentence.type*carrier.dominant + (1|id), data = .)
+
+summary(training_dom_model_nj)
+
+# LMEM for just Montreal. Significantly better performance in the dominant language
+
+training_dom_model_montreal <- response_window_agg_by_sub_training_dom %>%
+  filter(population == "Montreal") %>%
+  lmer(Prop ~  sentence.type*carrier.dominant + (1|id), data = .)
+
+summary(training_dom_model_montreal)
+
+
+
+```
+
+
+
+```{r}
+
+
+## Test
+
+test_dom_means <- response_window_agg_by_sub_test %>% # Get all the means
+  group_by(sentence.type, carrier.dominant) %>%
+  summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
+  mutate(SE = target.sd/sqrt(n)) %>%
+  mutate_if(is.numeric, funs(signif(., 2)))
+
+
+
+#Model with three-way
+
+test_dom_model1 <- lmer(Prop ~  sentence.type*carrier.dominant*population + (1|id), data = response_window_agg_by_sub_test_all)
+summary(test_dom_model1)
+
+#Remove three-way
+
+
+test_dom_model2 <- lmer(Prop ~  sentence.type*carrier.dominant + population*carrier.dominant + sentence.type* population + (1|id), data = response_window_agg_by_sub_test_all)
+summary(test_dom_model2)
+
+#Compare models.  Fit is not significantly worse
+
+anova(test_dom_model1, test_dom_model2)
+
+
+# LMEM for just NJ. Significant two-way interaction
+test_dom_model_nj <- response_window_agg_by_sub_test_all %>%
+  filter(population == "New Jersey") %>%
+  lmer(Prop ~  sentence.type*carrier.dominant + (1|id), data = .)
+
+summary(test_dom_model_nj)
+
+# LMEM for just Montreal.
+
+test_dom_model_montreal <- response_window_agg_by_sub_test_all %>%
+  filter(population == "Montreal") %>%
+  lmer(Prop ~  sentence.type*carrier.dominant + (1|id), data = .)
+
+summary(test_dom_model_montreal)
+
+
+
+
+
+response_window_agg_by_sub_test_all %>% 
+  group_by(carrier.dominant, sentence.type, population) %>%
+  summarize(Prop = mean(Prop, na.rm = TRUE)) %>%
+  ggplot(aes(x = carrier.dominant, y = Prop, fill = sentence.type)) +
+  geom_bar(position = "dodge", stat = "identity") +
+#  geom_point(stat = "mean") +
+  facet_grid (. ~ population)
+
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
