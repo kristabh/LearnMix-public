@@ -30,13 +30,13 @@ abstract: |
   Language mixing is common in bilingual children’s learning environments. Here, we investigated effects of language mixing on children’s learning of new words. We tested two groups of 3-year-old bilinguals: French–English (Experiment 1) and Spanish–English (Experiment 2). Children were taught two novel words, one in single-language sentences (“Look! Do you see the dog on the teelo?”) and one in mixed-language sentences with a mid-sentence language switch (“Look! Do you see the *chien/perro* on the walem?). During the learning phase, children correctly identified novel targets when hearing both single-language and mixed-language sentences. However, at test, French–English bilinguals did not successfully recognize the word encountered in mixed-language sentences. Spanish–English bilinguals failed to recognize either word, which underscores the importance of examining multiple bilingual populations. This research suggests that language mixing may sometimes hinder children’s encoding of novel words that occur downstream, but leaves open several possible underlying mechanisms.
   
 keywords          : "word learning, bilingualism, children, language mixing, code switching"
-wordcount         : "X"
 bibliography      : ["LearnMixBib.bib"]
 
 figsintext        : no
 figurelist        : no
 tablelist         : no
 footnotelist      : no
+numbersections    : false
 lineno            : yes
 mask              : no
 class             : "man"
@@ -83,23 +83,23 @@ library(lmerTest)
 
 ```
 
-By definition, children growing up in bilingual environments encounter switches between their languages. Some switches occur when different people use different languages, while others occur when a bilingual speaker mixes two languages. Switches are more common in some families than others, and they can happen at both very short and very long intervals. Many switches even occur within individual sentences (see @ervin_2005; @sridhar_1980). In a natural play study with Spanish-English bilingual families, all caregivers mixed two languages within sentences at least once, and some parents mixed languages in as many as one-third of their utterances [@bail_2015]. Indeed, parents sometimes produce mixed-language sentences even when they overtly try to avoid it [@bail_2015; @goodz_1989]. Given that language mixing is a normal part of bilingual environments, it is important to understand its relationship to children’s language learning. Here, we investigated whether and how language mixing affects 3-year-old children’s learning of new words.
+By definition, children growing up in bilingual environments encounter switches between their languages. Some switches occur when different people use different languages, while others occur when a bilingual speaker mixes two languages. Switches are more common in some families than others, and they can happen at both very short and very long intervals. Many switches even occur within individual sentences [see @ervin_2005; @sridhar_1980]. In a natural play study with Spanish-English bilingual families, all caregivers mixed two languages within sentences at least once, and some parents mixed languages in as many as one-third of their utterances [@bail_2015]. Indeed, parents sometimes produce mixed-language sentences even when they overtly try to avoid it [@bail_2015; @goodz_1989]. Given that language mixing is a normal part of bilingual environments, it is important to understand its relationship to children’s language learning. Here, we investigated whether and how language mixing affects 3-year-old children’s learning of new words.
 
-Language mixing has been shown to affect toddlers’ comprehension of subsequent familiar words. In an eye-tracking paradigm, 20-month-old French-English bilinguals saw two familiar objects on a screen (e.g., dog, book), and one object was labeled in either a single-language sentence (“Find the dog!”) or a mixed-language sentence [“Find the *chien*!”; @byersh_2017]. Toddlers were less accurate in looking to the target object when they heard it labeled in the mixed-language sentence than in the single-language sentence, particularly when switching occurred from their dominant to non-dominant language. This finding has been replicated with Spanish-English bilingual toddlers [@morini_2019; @potter_2019]. However, not all types of language mixing affected word comprehension: when the language switch occurred at a sentence boundary, toddlers’ looking to the target object was not disrupted [@byersh_2017].
+Language mixing has been shown to affect toddlers’ comprehension of familiar words. In an eye-tracking paradigm, 20-month-old French-English bilinguals saw two familiar objects on a screen (e.g., dog, book), and one object was labeled in either a single-language sentence (“Find the dog!”) or a mixed-language sentence [“Find the *chien*!”; @byersh_2017]. Toddlers were less accurate in looking to the target object when they heard it labeled in the mixed-language sentence than in the single-language sentence, particularly when switching occurred from their dominant to non-dominant language. This finding has been replicated with Spanish-English bilingual toddlers [@morini_2019; @potter_2019]. However, not all types of language mixing affected word comprehension: when the language switch occurred at a sentence boundary, toddlers’ looking to the target object was not disrupted [@byersh_2017].
 
-If language mixing can affect the processing of subsequent familiar words, then this could affect the processing of subsequent unfamiliar words. Support for this idea comes from studies of incremental, real-time language processing with monolinguals. For example, in one study, toddlers heard sentences that ended with a word that was unfamiliar to them, such as “Mommy feeds the ferret”. Their looking patterns indicated that they were able to use the verb "feeds" to infer that “ferret” was an animal rather than an inanimate object [@goodman_1998]. Children's efficiency in using familiar words to facilitate processing of subsequent words has been linked to vocabulary size and later vocabulary growth in both monolinguals [@fernald_2012; @fernald_2006; @lany_2017; @leww_2007] and bilinguals [@deanda_2018; @hurtado_2014; @legacy_2016; @marchman_2010]. Based on this work, we hypothesized that the momentary processing delays associated with language mixing would impact the learning of a novel word that appeared later in the sentence.
+If language mixing can affect the processing of familiar words, then this could affect the processing of subsequent unfamiliar words. Support for this idea comes from studies of incremental, real-time language processing with monolinguals. For example, in one study, toddlers heard sentences that ended with a word that was unfamiliar to them, such as “Mommy feeds the ferret”. Their looking patterns indicated that they were able to use the verb "feeds" to infer that “ferret” was an animal rather than an inanimate object [@goodman_1998]. Children's efficiency in using familiar words to facilitate processing of subsequent words has been linked to vocabulary size and later vocabulary growth in both monolinguals [@fernald_2012; @fernald_2006; @lany_2017; @leww_2007] and bilinguals [@deanda_2018; @hurtado_2014; @legacy_2016; @marchman_2010]. Based on this work, we hypothesized that the momentary processing delays associated with language mixing would impact the learning of a novel word that appeared later in the sentence.
 
-To date, few studies have investigated links between language mixing and vocabulary growth in young children, and their results are equivocal. One large study (*N* = 181) with children aged 18 and 24 months learning English and a variety of other languages found that parents who reported more language mixing often had children with smaller vocabulary sizes [@byersh_2013]. A smaller study did not find clear links between parental language mixing in the laboratory and vocabulary size in 18- to 24-month-olds [@bail_2015]. Two studies that measured mixing more indirectly (i.e., as the proportion of 30-minute blocks of time where both English and Spanish were spoken) also reported no links between mixing and 2.5-year-old children’s language development [@place_2011; @place_2016]. The correlational nature of these studies makes it difficult to establish causation, for example by separating effects of mixing from other potentially confounding factors, such as parents’ language proficiency, or children’s absolute quantity of language exposure.
+To date, few studies have investigated links between language mixing and vocabulary growth in young children, and their results are equivocal. One large study (*N* = 181) with children aged 18 and 24 months learning English and a variety of other languages found that parents who reported more language mixing often had children with smaller vocabulary sizes [@byersh_2013]. A smaller study did not find clear links between parental language mixing in the laboratory and vocabulary size in 18- to 24-month-olds [@bail_2015]. Two studies that measured mixing more indirectly (i.e., as the proportion of 30-minute blocks of time where both English and Spanish were spoken) also reported no links between mixing and 2.5-year-old children’s language development [@place_2011; @place_2016]. The correlational nature of these studies makes it difficult to establish causation, as they cannot separate effects of mixing from other potentially confounding factors, such as parents’ language proficiency, or children’s absolute quantity of language exposure.
 
 The goal of the current research was to examine whether and how mid-sentence language mixing might affect children’s learning of a novel word that is spoken moments later. Given that language mixing is a common practice both within and across sentences and that children are exposed to thousands of new words throughout the first years of life, we sought to understand the intersection of these important aspects of bilingual development. 
 
-As a secondary goal, we sought to understand the generalizability of our results across different groups of bilingual learners. Testing two groups of bilingual toddlers in the same paradigm has been quite rare in the literature, likely because of the challenge of recruiting and testing such populations [@byers-heinlein_2020]. Our strategy was to test the most highly representative populations of bilinguals in two communities: French–English bilingual children growing up in [omitted] (Experiment 1), and Spanish–English bilingual children growing up in [omitted] (Experiment 2). Previous work has demonstrated that language mixing affects real-time word comprehension among children from both of these populations, thus making our results more interpretable [@byersh_2017; @potter_2018; @potter_2019; @morini_2019]
+As a secondary goal, we sought to understand the generalizability of our results across different groups of bilingual learners. Testing two groups of bilingual toddlers in the same paradigm has been quite rare in the literature, likely because of the challenge of recruiting and testing such populations [@byers-heinlein_2020]. Our strategy was to test the most representative populations of bilinguals in two communities: French–English bilingual children growing up in Montreal (Experiment 1), and Spanish–English bilingual children growing up in New Jersey (Experiment 2). Previous work has demonstrated that language mixing affects real-time word comprehension among children from both of these populations, thus making our results more interpretable [@byersh_2017; @potter_2018; @potter_2019; @morini_2019]
 
-French-English and Spanish-English bilinguals in these communities differ along multiple dimensions, and here we highlight three particularly important differences. Most obviously, the two groups are learning different language pairs. However, because French and Spanish are typologically similar languages, we would not necessarily expect different effects of language mixing on word learning. The two groups also differ in terms of family/community norms for language use. Studies suggest that parents of Spanish-English bilinguals code-switch more often in interactions with their infants and toddlers than parents of French-English bilinguals [@bail_2015; @kremin_2020]. Thus, it is possible that Spanish-English bilinguals would have more everyday exposure to the type of code-switched stimuli that we included in our study, which could make it easier for them to process [@kroff_2017]. Finally, French-English bilingual participants in [[omitted] are generally of mid-to-high socioeconomic status (SES), while Spanish-English bilingual participants in [omitted] have a wider range of SES, including many families of lower SES. Previous research using related experimental tasks has found that toddlers of higher SES have stronger language processing skills than those with lower SES [@fernald_2012; @fernald_2013], which makes it plausible that French-English bilinguals may demonstrate more successful word learning in our task compared to Spanish-English bilinguals. Although any differences observed between the two populations could be attributed to one or more of these dimensions of difference, our comparison is an important first step for evaluating the generalizability of findings across populations of bilingual learners.
+French-English and Spanish-English bilinguals in these communities differ along multiple dimensions, and here we highlight three particularly important differences. Most obviously, the two groups are learning different language pairs. However, because French and Spanish are typologically similar languages, we would not necessarily expect different effects of language mixing on word learning. The two groups also differ in terms of family/community norms for language use. Studies suggest that parents of Spanish-English bilinguals code-switch more often in interactions with their infants and toddlers than parents of French-English bilinguals [@bail_2015; @kremin_2020]. Thus, it is possible that Spanish-English bilinguals would have more everyday exposure to the type of code-switched stimuli that we included in our study, which could make it easier for them to process [@kroff_2017]. Finally, French-English bilingual participants in Montreal are generally of mid-to-high socioeconomic status (SES), while Spanish-English bilingual participants in New Jersey have a wider range of SES, including many families of lower SES. Previous research using related experimental tasks has found that toddlers of higher SES have stronger language processing skills than those of lower SES [@fernald_2012; @fernald_2013], which makes it plausible that French-English bilinguals may demonstrate more successful word learning in our task compared to Spanish-English bilinguals. Although any differences observed between the two populations could be attributed to one or more of these dimensions of difference, our comparison is an important first step for evaluating the generalizability of findings across populations of bilingual learners.
 
 Our experiments tested 3-year-old children using an eye-tracking task with a learning phase and a test phase, and was based on an existing paradigm designed to test how slow-downs in processing of one word might affect learning of a subsequent word [@fernald_2008]. During the learning phase, children were taught two novel words. One novel word always appeared at the end of a single-language sentence (e.g., “Look! Do you see the dog on the teelo?”), and the second novel word always appeared at the end of a mixed-language sentence, i.e., a sentence containing one word borrowed from the other language (e.g., “Look! Do you see the *chien/perro* on the walem?”). We chose to code-mix at the point of a familiar word that preceded a novel word, rather than at the novel word itself (e.g., “Do you see the *tileau*?”), for two reasons. First, this enabled us to examine effects of language mixing on downstream learning, which would not be possible if the switch occurred at the novel word itself. Second, this allowed children to use both their existing lexical knowledge as well as phonological cues to detect that a code switch had occurred. Given that this is the first study to examine this research question, we aimed to give children as many cues as possible. In our design, the novel word always appeared in the same language in which the sentence began, and this language was randomly assigned to be children’s dominant or non-dominant language. While listening to these sentences, children viewed pairs of familiar animals on top of novel objects (e.g., a bunny atop a novel purple object, and a dog atop a novel green object; see Figure \@ref(fig:stimuli-figure)). The visual scene required children to accurately identify the familiar referent in order to then locate the target novel referent. That is, children needed to first look to the dog in order to determine which of the two novel objects was being labeled. During the subsequent test phase, the two novel objects appeared side by side, with no familiar objects present, and children were assessed on their learning of label-object mappings.
 
-Our main prediction was that children would show better learning of the novel word encountered in single-language sentences than in mixed-language sentences. Based on previous findings [@byersh_2017; @potter_2019; @morini_2019], we hypothesized that this would be due to a temporary disruption in language processing upon hearing the borrowed word. Specifically, upon hearing a language switch, children would be less able to identify and encode the mapping between the novel label and novel object. This would be evident in children’s behavior during the learning phase. Specifically, we predicted that on mixed-language trials (relative to single-language trials), children would be less successful in identifying the correct familiar object and, in turn, would have less time to gaze at the target novel object.
+Our main prediction was that children would show better learning of the novel word encountered in single-language sentences than in mixed-language sentences. Based on previous findings [@byersh_2017; @potter_2019; @morini_2019], we hypothesized that this would be due to a temporary disruption in language processing upon hearing the borrowed word. Specifically, upon hearing a language switch, children would be less able to identify and encode the mapping between the novel label and novel object. This would be evident in children’s behavior during the learning phase. Specifically, we predicted that on mixed-language trials (relative to single-language trials), children would be less successful in identifying the correct familiar object and, in turn, would have spent less time gazing at the target novel object.
 
 We also considered several other potential results. First, it is possible that even when language mixing disrupts real-time processing, young children's uptake of new words is unaffected. Second, it is possible that we would not replicate previously reported effects of language mixing on language comprehension. In this case, we would either find that language mixing does not affect word learning, or possibly that it does affect word learning but not due to in-the-moment processing difficulties during the learning phase. Finally, considering the population differences noted above, French-English and Spanish-English bilingual children might show different patterns of looking, listening, and learning. We thus not only compared the two groups, but also explored whether individual differences in performance during the learning phase, exposure to language mixing at home, or vocabulary size predicted successful word learning in both the single-language and the mixed-language conditions.
 
@@ -119,17 +119,17 @@ excl_montreal <- read_csv("../data/part_montreal_anon.csv") %>%
 ```
 
 
-# Experiment 1: French-English bilinguals in [omitted]
+# Experiment 1: French-English bilinguals in Montreal
 
 ## Method
 
-The methods of Experiment 1 were approved by the [omitted] University Human Research Ethics Committee (“Monolingual and Bilingual Language Development”; approval #10000493). Data were collected between November 2016 and April 2017, and parents provided informed consent prior to their child’s participation. As is common in laboratories that test hard-to-recruit populations such as bilingual children, children participated in a second, separate study, either immediately prior to or following participation in this experiment (the order of the two studies was counterbalanced). The results of that study are not reported here. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
+The methods of Experiment 1 were approved by the Concordia University University Human Research Ethics Committee (“Monolingual and Bilingual Language Development”; approval #10000493). Data were collected between November 2016 and April 2017, and parents provided informed consent prior to their child’s participation. As is common in laboratories that test hard-to-recruit populations such as bilingual children, children participated in a second, separate study, either immediately prior to or following participation in this experiment (the order of the two studies was counterbalanced). The results of that study are not reported here. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
 
 The general concept for the study design was inspired by @fernald_2008, which examined how children’s processing of adjective-noun sequences can sometimes derail children’s learning of novel words that appear later in the sentence (e.g., “There’s a blue cup on the deebo”). Here, children heard a sentence either with or without a mid-sentence language switch, which was then followed by a novel noun.
 
 ### Participants
 
-Children were recruited from a database of families interested in participating in research, principally identified via government birth lists. A total of `r length(part_montreal$id)` healthy French-English bilingual children were included in the final sample. A sensitivity analysis indicated that this sample size has 80% power to detect an effect size of *dz* = .68 or greater in a two-tailed repeated measures *t*-test, which is the average effect size observed in word recognition paradigms in children older than 16 months according to MetaLab (https://metalab.stanford.edu; [@bergmann_2015]). All children were growing up in [omitted]. Both French and English are widely spoken in the community, and the community generally holds positive attitudes toward both languages [@kircher_2014]. Childcare and elementary education are widely available in both languages.
+Children were recruited from a database of families interested in participating in research, principally identified via government birth lists. A total of `r length(part_montreal$id)` healthy French-English bilingual children were included in the final sample. A sensitivity analysis indicated that this sample size has 80% power to detect an effect size of *dz* = .68 or greater in a two-tailed repeated measures *t*-test, which is the average effect size observed in word recognition paradigms in children older than 16 months according to MetaLab [https://metalab.stanford.edu; @bergmann_2015]. All children were growing up in Montreal. Both French and English are widely spoken in the community, and the community generally holds positive attitudes toward both languages [@kircher_2014]. Childcare and elementary education are widely available in both languages.
 
 Children had an average age of `r round(mean(part_montreal$age.years), 1)` years (range: `r round(min(part_montreal$age.years), 1)` – `r round(max(part_montreal$age.years), 1)`).  There were `r length(which(part_montreal$gender == "male"))` males and `r length(which(part_montreal$gender == "female"))` females. A modified version of the Language Experience and Proficiency Questionnaire [@marian_2007] was used to assess the children’s language background and proficiency. As part of the questionnaire, parents were asked to rate their child’s proficiency in French and in English. A predetermined inclusion criterion was that children were rated at least 7/10 in comprehension in both languages. Language dominance was established for each child as the language that was rated the highest for comprehension.  When ratings were equal in both languages, the child’s dominant language was considered to be the mother’s dominant language. There were `r length(which(part_montreal$child.dom.lang == "English"))` English-dominant children and `r length(which(part_montreal$child.dom.lang == "French"))` French-dominant children. Age of acquisition of the languages varied across the sample: there were `r length(which(part_montreal$aoa.L2 == 0))` children who were regularly exposed to both English and French from birth (i.e., were simultaneous bilinguals), and `r length(which(part_montreal$aoa.L2 > 0))` who began regular exposure to their second language later in life (in all cases prior to age `r max(part_montreal$aoa.L2)` months), usually upon starting daycare. Another `r length(excl_montreal$exclusion)` children were tested but not included in the final sample due to fussiness (_n_ = `r length(excl_montreal$exclusion[excl_montreal$exclusion == "fussiness"])`), reported health or developmental issues (_n_ = `r length(excl_montreal$exclusion[excl_montreal$exclusion == "health"])`), not meeting pre-established language criteria (_n_ =`r length(excl_montreal$exclusion[excl_montreal$exclusion == "language"])`), or because of technical difficulties (_n_ = `r length(excl_montreal$exclusion[excl_montreal$exclusion == "technical"])`).
 
@@ -137,10 +137,10 @@ Children's exposure to intra-sentential language mixing was measured via the Lan
 
 Socioeconomic status was assessed via mothers' highest educational attainment. All mothers had completed high school. Specifically, `r length(which(part_montreal$maternal.education == "masters" | part_montreal$maternal.education == "doctoral"))` mothers had completed a graduate degree, `r length(which(part_montreal$maternal.education == "bachelors"))` had completed a bachelor's degree, `r (length(which(part_montreal$maternal.education == "some_uni")) + length(which(part_montreal$maternal.education == "college_diploma")) + length(which(part_montreal$maternal.education == "trade_school")))` had completed other post-secondary training (e.g., college diploma, some university, trade school), and `r length(which(part_montreal$maternal.education == "high_school"))` had completed high school but had not received further formal education.
 
-Children’s productive vocabulary was measured in each of their languages. We assessed vocabulary via parent report measure, rather than using a direct measure such as  the Peabody Picture Vocabulary Test (PPVT; @dunn_2007).This choice was made in order to reduce the length of the experimental session for children, as they were also participating in a second eye-tracking study. Moreover, some of our research assistants did not have sufficient proficiency to administer the test in both languages. We chose a vocabulary measure appropriate for this age group, the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], which consisted of a checklists of words known by children ages 2-18 years based on words used in the Peabody Picture Vocabulary Test [PPVT; @dunn_2007]. The DVAP shows high level of concurrent and predictive validity [@libertus_2015]. To assess children’s vocabulary size in French, we adapted a checklist similar to the DVAP, based on words used in the French adaptation of the PPVT [Échelle de vocabulaire en images Peabody; @dunn_1993]. The words are ordered from easy (e.g., boy, chair) to hard (e.g., honing, angler), and parents were asked to indicate which words their child could say. A parent who was familiar with the child’s vocabulary in a particular language filled out the form in that language. In some cases, each parent filled out a form in the language they usually used to interact with their child, while in other cases the same parent filled out both forms. One parent, who was not familiar with the language her child used at daycare, had the form filled out by a daycare worker. Data were missing for one language for `r as.english(sum(is.na(part_montreal$vocab.total)))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_montreal$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_montreal$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_montreal$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_montreal$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_montreal$vocab.nondom, na.rm = TRUE),0)`), [`r apa_print(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom,paired=TRUE))$statistic`, *d* = `r cohens_d(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom,paired=TRUE))`]. The average number of words produced across both languages was `r round(mean(part_montreal$vocab.total, na.rm = TRUE),0)` (range: `r round(min(part_montreal$vocab.total, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.total, na.rm = TRUE),0)`). 
+Children’s productive vocabulary was measured in each of their languages. We assessed vocabulary via parent report measure, rather than using a direct measure such as  the Peabody Picture Vocabulary Test [PPVT; @dunn_2007].This choice was made in order to reduce the length of the experimental session for children, as they were also participating in a second eye-tracking study. Moreover, some of our research assistants did not have sufficient proficiency to administer the test in both languages. We chose a vocabulary measure appropriate for this age group, the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], which consisted of a checklists of words known by children ages 2-18 years based on words used in the Peabody Picture Vocabulary Test [PPVT; @dunn_2007]. The DVAP shows high level of concurrent and predictive validity [@libertus_2015]. To assess children’s vocabulary size in French, we adapted a checklist similar to the DVAP, based on words used in the French adaptation of the PPVT [Échelle de vocabulaire en images Peabody; @dunn_1993]. The words are ordered from easy (e.g., boy, chair) to hard (e.g., honing, angler), and parents were asked to indicate which words their child could say. A parent who was familiar with the child’s vocabulary in a particular language filled out the form in that language. In some cases, each parent filled out a form in the language they usually used to interact with their child, while in other cases the same parent filled out both forms. One parent, who was not familiar with the language her child used at daycare, had the form filled out by a daycare worker. Data were missing for one language for `r as.english(sum(is.na(part_montreal$vocab.total)))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_montreal$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_montreal$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_montreal$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_montreal$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_montreal$vocab.nondom, na.rm = TRUE),0)`), [`r apa_print(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom,paired=TRUE))$statistic`, *d* = `r cohens_d(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom,paired=TRUE))`]. The average number of words produced across both languages was `r round(mean(part_montreal$vocab.total, na.rm = TRUE),0)` (range: `r round(min(part_montreal$vocab.total, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.total, na.rm = TRUE),0)`). 
 
 
-### Visual Stimuli
+### Visual stimuli
 
 Visual stimuli consisted of three animals (bunny, dog, fish) and two novel objects created for this study. Familiar animals were selected among words known by at least 50% of 18-month-olds in English, and at least 50% of 16-month-olds in English [see @fenson_2007] and Québec French [@boudreault_2007; @frank_2017]. None of the animals or their French translations had phonological overlap at onset, nor were they cognates. Images of the animals were chosen from free online libraries. Images of platform-like novel objects were found online and digitally modified, such that they did not closely resemble any known object.
 
@@ -164,11 +164,9 @@ During the test phrase, auditory stimuli consisted of simple sentences that dire
 
 ### Procedure
 
-The general concept for the study design was inspired by @fernald_2008, which examined how children’s processing of adjective-noun sequences can sometimes derail children’s learning of novel words that appear later in the sentence (e.g., “There’s a blue cup on the deebo”). Here, children heard a sentence either with or without a mid-sentence language switch, which was then followed by a novel noun.
+Children were seated on their parents’ laps or directly on a chair in front of a 24-inch Tobii T60XL corneal reflection eye-tracking system which collected gaze data at a rate of 60 Hz (Tobii Group, Stockholm, Sweden) located in a sound-attenuated, dimly-lit room, which was used to present the stimuli and record children’s eye gaze. Parents were asked to wear darkened sunglasses and headphones so they would be unaware of the stimuli. They were also asked not to talk or interact with the child during the experiment. Calibration was completed using a built-in five-point calibration routine. The sound was set at an average of 70 dB. Children viewed the stimuli in one of four randomly assigned experimental orders consisting of 12 learning trials (6 single-language sentences, 6 mixed-language sentences) immediately followed by 4 test trials. A colourful attention-getter was presented prior to each trial to reorient the child to the screen. Children were randomly assigned to hear the carrier phrases of both the learning and test phases either always in English or always in French. This resulted in `r length(which(part_montreal$carrier.dominant == "dominant"))` children being tested in their dominant language, and `r length(which(part_montreal$carrier.dominant == "non-dominant"))` children being tested in their non-dominant language. A sample trial order for a single child is presented in the Appendix.
 
-Children were seated on their parents’ laps or directly on a chair in front of a 24-inch Tobii T60XL corneal reflection eye-tracking system which collected gaze data at a rate of 60 Hz (Tobii Group, Stockholm, Sweden) located in a sound-attenuated, dimly-lit room, which was used to present the stimuli and record children’s eye gaze. Parents were asked to wear darkened sunglasses and headphones with music to blind them to the trial type. They were also asked not to talk or interact with the child during the experiment. Calibration was completed using a built-in five-point calibration routine. The sound was set at an average of 70 dB. Children viewed the stimuli in one of four randomly assigned experimental orders consisting of 12 learning trials (6 single-language sentences, 6 mixed-language sentences) immediately followed by 4 test trials. A colourful attention-getter was presented prior to each trial to reorient the child to the screen. Children were randomly assigned to hear the carrier phrases of both the learning and test phases either always in English or always in French. This resulted in `r length(which(part_montreal$carrier.dominant == "dominant"))` children being tested in their dominant language, and `r length(which(part_montreal$carrier.dominant == "non-dominant"))` children being tested in their non-dominant language. A sample trial order for a single child is presented in the Appendix.
-
-During each of 12 learning trials, the two novel objects appeared side by side, with a different familiar object on top of each of them (e.g., a dog on the teelo, and a bunny on the walem). After 2000 ms, the auditory stimulus directed the child to look at the familiar target atop the novel target, either in the single-language or mixed-language sentence. The familiar word onset occurred exactly at 4500 ms, and the audio for each trial ended at around 6500 ms, leaving approximately 2000 ms of looking time after the target novel offset; the total length of each learning trial was 8500 ms. Each novel object was consistently labeled in a single-language or mixed-language sentence, and the assignment of label to sentence type was counterbalanced across children. Each familiar target in the learning phase appeared eight times, counterbalanced within children for whether it served as a target or a distractor, and whether it was encountered in a single-language or mixed-language sentence. The two novel objects appeared on every trial, half as target and half as distractor for each child. Assignment of label-object pairs was counterbalanced by trial type across participants (i.e., half of participants consistently encountered “teelo” in single-language sentences and “walem” in mixed-language sentences, while the other half consistently encountered “walem” in single-language sentences and “teelo” in mixed-language sentences). Trial order during the learning phase was semi-randomized.
+During each of 12 learning trials, the two novel objects appeared side by side, with a different familiar object on top of each of them (e.g., a dog on the teelo, and a bunny on the walem). After 2000 ms, the auditory stimulus directed the child to look at the familiar target atop the novel target, either in the single-language or mixed-language sentence. The familiar word onset occurred exactly at 4500 ms, and the audio for each trial ended at around 6500 ms, leaving approximately 2000 ms of looking time after the target novel offset; the total length of each learning trial was 8500 ms. Each novel object was consistently labeled in a single-language or mixed-language sentence, and the assignment of label to sentence type was counterbalanced across children. Each familiar target in the learning phase appeared eight times, counterbalanced within children for whether it served as a target or a distractor, and whether it was encountered in a single-language or mixed-language sentence. The two novel objects appeared on every trial, half as target and half as distractor for each child. Assignment of label-object pairs was counterbalanced by sentence type across participants (i.e., half of participants consistently encountered “teelo” in single-language sentences and “walem” in mixed-language sentences, while the other half consistently encountered “walem” in single-language sentences and “teelo” in mixed-language sentences). Trial order during the learning phase was semi-randomized.
 
 During each of four test trials, only the two novel objects appeared on the screen, presented side by side without their corresponding familiar objects. The novel objects appeared in silence for approximately 2000 ms, and then the auditory stimulus directed children’s attention to a target object such that the target novel word onset occurred at exactly 3000 ms. Each test trial lasted 6000 ms. Each novel object appeared twice as target and twice as distractor, and side of presentation was counterbalanced both within and across children.
 
@@ -321,7 +319,7 @@ mixed_se <- test_agg %>%
 
 
 ```{r include = FALSE, echo = FALSE}
-## TEST FRENCH-ENGLISH: Run t-tests for phase by trial type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
+## TEST FRENCH-ENGLISH: Run t-tests for phase by sentence type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
 
 test_paired <- response_window_agg_by_sub_test %>%
      mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
@@ -332,9 +330,9 @@ test_paired <- response_window_agg_by_sub_test %>%
 ```
 
 ```{r include = FALSE}
-## Robustness test to make sure that three infants who didn't look at the target during test are not driving the results
+## Robustness test to make sure that three children who didn't look at the target during test are not driving the results
 
-#ids of infants who did not look to the target at all
+#ids of children who did not look to the target at all
 zero_test <- response_window_agg_by_sub_test %>%
   filter(Prop == 0) %>%
   select(id) %>%
@@ -342,7 +340,7 @@ zero_test <- response_window_agg_by_sub_test %>%
 
 test_paired_filtered <- response_window_agg_by_sub_test %>%
   mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
-  filter(!id %in% zero_test) %>% # remove infants with zero looks
+  filter(!id %in% zero_test) %>% # remove children with zero looks
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1))
 ```
@@ -406,7 +404,7 @@ test_salience <- response_window_test_salience %>%
   mutate(cohen_d = statistic/sqrt(parameter +1))
 
 
-# And also examine by trial type
+# And also examine by sentence type
 
 response_window_test_salience.1 <- response_window_clean_test %>%
   make_time_window_data(data = .,
@@ -454,7 +452,7 @@ test_figure <- test_agg %>%
   geom_errorbar(aes(ymin = target.mean + SE, ymax = target.mean - SE), 
                 width = .2,
                 position = position_dodge(.9)) +
-  labs(y = "Proportion target looking", x ="Trial type") +
+  labs(y = "Proportion target looking", x ="Sentence type") +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         axis.text = element_text(size=16),
@@ -477,7 +475,7 @@ test_figure <- test_agg %>%
 
 Our main analysis directly compared children's performance at test across the two conditions. A two-tailed paired-samples *t*-test indicated that children looked significantly longer at the target object when its label had been encountered in single-language sentences [*M* = `r single_mean`, *SD* = `r single_se`] than when its label had been encountered in mixed-language sentences [*M* = `r mixed_mean`, *SD* = `r mixed_se`, *t*(`r test_paired$parameter`) = `r round(test_paired$statistic,2) `, *p* = `r round(test_paired$p.value, 2)`, *d* = `r round(test_paired$cohen_d,2)`]. Children's looking to the target novel object was significantly above chance (.5) when its label had been heard in single-language sentences, [*t*(`r test_chance$parameter[2]`) = `r test_chance$statistic[2] `, *p* = `r test_chance$p.value[2]`, *d* = `r test_chance$cohen_d[2]`], indicating successful recognition. However, children's looking to the target novel object was not significantly above (or below) chance when its label had been heard in mixed-language sentences, [*t*(`r test_chance$parameter[1]`) = `r test_chance$statistic[1] `, *p* = `r test_chance$p.value[1]`, *d* = `r test_chance$cohen_d[1]`], indicating lack of successful recognition. Together, these results suggest that mid-sentence mixing of an informative familiar word can block three-year-olds’ learning of a novel word that follows moments later. Results are illustrated in Figure \@ref(fig:test-figure).
 
-```{r test-figure, include = TRUE, fig.cap = "Proportion looking to target objects for French-English bilinguals (Experiment 1)."}
+```{r test-figure, include = TRUE, fig.cap = "Average proportion looking to target object for French-English bilinguals (Experiment 1). Cirlces show individual datapoints. Bars represent standard error of the mean."}
 
 test_figure
 
@@ -551,7 +549,9 @@ training_agg <- response_window_agg_by_sub_training %>% # Get all the means
   summarise(mean = mean(Prop), sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = sd/sqrt(n)) %>%
   mutate_if(is.numeric, funs(signif(., 3))) %>%
-  select(target.type, sentence.type, familiarity, mean, sd)
+  select(target.type, sentence.type, familiarity, mean, sd) %>%
+  mutate(sentence.type = str_to_lower(sentence.type)) %>%
+  rename("target type" = target.type, "sentence type" = sentence.type)
 ```
 
 
@@ -601,7 +601,7 @@ test_paired <- response_window_agg_by_sub_training %>%
 
 
 ```{r include = FALSE, echo = FALSE}
-## TRAINING FRENCH-ENGLISH: Run t-tests for phase by trial type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
+## TRAINING FRENCH-ENGLISH: Run t-tests for phase by sentence type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
 
 (test_paired <- response_window_agg_by_sub_training %>%
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
@@ -719,7 +719,7 @@ mutate(sentence.type = fct_rev(sentence.type)) %>%
 
 ### Learning phase
 
-To better understand children’s overall unsuccessful learning of the word presented in mixed-language sentences, we investigated their looking patterns during the learning phase. We expected that language mixing would affect learning in this study by slowing children’s processing of the familiar word, which, in turn, would block children from having sufficient time to encode the novel word/object pair. If correct, this would manifest as less looking to the labeled objects (both familiar and novel) during mixed-language sentences than during single-language sentences.
+To better understand children’s overall unsuccessful learning of the word presented in mixed-language sentences, we investigated their looking patterns during the learning phase. We expected that language mixing would affect learning in this study by slowing children’s processing of the familiar word, which, in turn, would block children from having sufficient time to encode the novel word-object pair. If correct, this would manifest as less looking to the labeled objects (both familiar and novel) during mixed-language sentences than during single-language sentences.
 
 We computed the proportion of time that children looked toward each of the four objects onscreen: the familiar target, the novel target, the familiar distractor, and the novel distractor. As during the test phase, data for each trial were collapsed across a time window 360-2000 ms after the familiar word onset. We note that while it is possible that children would need additional time to process the novel word that followed the familiar word, this time window afforded maximum sensitivity for detecting potential differences in the single-language versus mixed-language contexts [@swingley_2012]. Trials where the child was inattentive were excluded from these analyses (i.e., when they looked at the four objects on the screen for less than 750 ms total). Children contributed data for an average of `r num_training_trials[[2,2]]` single-language trials (range: `r num_training_trials[[2,3]] `- `r num_training_trials[[2,4]]`) and `r num_training_trials[[1,2]] ` mixed-language trials (range: `r num_training_trials[[1,3]] `– `r num_training_trials[[1,4]]`) out of 6 possible trials per type. Means and standard deviations of proportion looking to each object type (target familiar, target novel, distractor familiar, distractor novel) during single-language and mixed-language sentences are displayed in Table \@ref(tab:training-descriptives-table).
 
@@ -729,7 +729,7 @@ apa_table(training_agg, digits = 2, caption = "French-English bilinguals (Experi
 
 ```
 
-Proportion of looking to the objects was analyzed with a 2 (target type: target, distractor) x 2 (familiarity: familiar, novel) x 2 (trial type: single-language, mixed-language) repeated measures ANOVA. Statistics are displayed in Table \@ref(tab:training-anova-table); note that chance looking is not 0.5, as there were two groups of two objects on the screen. There were significant main effects of familiarity (greater looking at novel than familiar objects) and target type (greater looking at target than distractor objects). There was also a significant interaction between familiarity and target type: looking times to target objects were higher overall, with significantly greater looking to novel than to familiar targets, and looking times to distractor objects were lower overall, with no significant difference in looking to novel vs. familiar distractors. Critically, there were no effects or interactions with trial type, indicating similar patterns of looking across single-language and mixed-language sentences. Across both single-language and mixed-language sentences, children looked significantly longer at the target objects than the distractor objects after hearing the label  (*p*s < .05). Visual inspection of time course plots (Figure \@ref(fig:training-timecourse-figure)) confirms that on both single-language and mixed-language sentences, children showed similar increases in looking to the labeled objects after naming. These analyses suggest that language mixing did not affect children’s accuracy in looking to the labeled targets during the learning phase.
+Proportion of looking to the objects was analyzed with a 2 (target type: target, distractor) x 2 (familiarity: familiar, novel) x 2 (sentence type: single-language, mixed-language) repeated measures ANOVA. Statistics are displayed in Table \@ref(tab:training-anova-table); note that chance looking is not 0.5, as there were two groups of two objects on the screen. There were significant main effects of familiarity (greater looking at novel than familiar objects) and target type (greater looking at target than distractor objects). There was also a significant interaction between familiarity and target type: looking times to target objects were higher overall, with significantly greater looking to novel than to familiar targets, and looking times to distractor objects were lower overall, with no significant difference in looking to novel vs. familiar distractors. Critically, there were no effects or interactions with sentence type, indicating similar patterns of looking across single-language and mixed-language sentences. Across both single-language and mixed-language sentences, children looked significantly longer at the target objects than the distractor objects after hearing the label  (*p*s < .05). Visual inspection of time course plots (Figure \@ref(fig:training-timecourse-figure)) confirms that on both single-language and mixed-language sentences, children showed similar increases in looking to the labeled objects after naming. These analyses suggest that language mixing did not affect children’s accuracy in looking to the labeled targets during the learning phase.
 
 ```{r training-timecourse-figure, echo = FALSE, include = TRUE, fig.cap = "Timecourse of looking to labeled target for French-English bilinguals (Experiment 1)."}
  
@@ -741,7 +741,14 @@ training_timecourse_figure
 
 ```{r training-anova-table, echo = FALSE, include = TRUE, results = "asis", warning = FALSE, message = FALSE}
 
-apa_table(training_anova[1]$ANOVA, digits = 2, caption = "French-English bilingualsn (Experiment 1): ANOVA for learning trials.")
+# Creating dataframe with cleaner Effect names
+
+training_anova_table <- training_anova[1]$ANOVA %>%
+  mutate(Effect = as.factor(Effect)) %>%
+  mutate(Effect = recode(Effect, sentence.type = "sentence type", target.type = "target type", `sentence.type:familiarity` = "sentence type * familiarity")) %>%
+  mutate(Effect = recode (Effect, `sentence.type:target.type` = "sentence type * target type",`familiarity:target.type` = "familiarity * target type", `sentence.type:familiarity:target.type` = "sentence type * familiarity * target type"))
+
+apa_table(training_anova_table, digits = 2, caption = "French-English bilinguals (Experiment 1): ANOVA for learning trials.")
 
 
 ```
@@ -868,7 +875,7 @@ num_test_trials2 <- response_window_clean_test2 %>%
 
 
 ```{r include = FALSE}
-## TEST SPANISH-ENGLISH: Run t-tests for phase by trial type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
+## TEST SPANISH-ENGLISH: Run t-tests for phase by sentence type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
 
 (test_paired2 <- response_window_agg_by_sub_test2 %>%
   mutate(sentence.type = fct_rev(sentence.type)) %>% # Reversing factor so that better performance for same gives positive statistic
@@ -951,7 +958,7 @@ test_salience2 <- response_window_test_salience2 %>%
   mutate(cohen_d = statistic/sqrt(parameter +1))
 
 
-# Do the same by trial type
+# Do the same by sentence type
 
 response_window_test_salience2.1 <- make_time_window_data(response_window_clean_test2, 
                                                     aois = c("target"),
@@ -965,21 +972,21 @@ means_salience2.1 <- response_window_test_salience2.1 %>% # Get all the means
 
 ```
 
-# Experiment 2: Spanish-English bilinguals in [omitted]
+# Experiment 2: Spanish-English bilinguals in New Jersey
 
-In Experiment 1, we found that mid-sentence language mixing reduced French-English bilingual children’s abilities to encode a sentence-final novel word. Instead of using these findings to draw conclusions about the nature of bilingual development, we examined their generalizability to a different bilingual population. The purpose of Experiment 2 was to study how language mixing affects word learning among Spanish-English bilingual 3-year-olds in [omitted].
+In Experiment 1, we found that mid-sentence language mixing reduced French-English bilingual children’s abilities to encode a sentence-final novel word. Instead of using these findings to draw conclusions about the nature of bilingual development, we examined their generalizability to a different bilingual population. The purpose of Experiment 2 was to study how language mixing affects word learning among Spanish-English bilingual 3-year-olds in New Jersey.
 
 ## Method
 
-The method of Experiment 2 was approved by the [omitted] Institutional Review Board (“Language learning: Sounds, words, and grammar”; approval #7117). Data were collected between March 2017 and January 2018, and parents provided informed consent prior to their child’s participation. As in Experiment 1, participants in Experiment 2 participated in an additional experiment either prior to or after participating in this experiment. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
+The method of Experiment 2 was approved by the Princeton University Institutional Review Board (“Language learning: Sounds, words, and grammar”; approval #7117). Data were collected between March 2017 and January 2018, and parents provided informed consent prior to their child’s participation. As in Experiment 1, participants in Experiment 2 participated in an additional experiment either prior to or after participating in this experiment. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
 
 ### Participants
 
-A total of 21 healthy Spanish-English bilingual children were included in the final sample. All children were growing up in [omitted]. English is the majority language and Spanish is the minority language in this region. Participants were primarily recruited via various nonprofit organizations in the region.
+A total of 21 healthy Spanish-English bilingual children were included in the final sample. All children were growing up in New Jersey. English is the majority language and Spanish is the minority language in this region. Participants were primarily recruited via various nonprofit organizations in the region.
 
 Children had an average age of `r round(mean(part_princeton$age.years),1)` years (range: `r round(min(part_princeton$age.years),1)` – `r round(max(part_princeton$age.years),1)`). There were `r length(which(part_princeton$gender == "male"))` males and `r length(which(part_princeton$gender == "female"))` females. As in Experiment 1, a modified version of the Language Experience and Proficiency Questionnaire [@marian_2007] was used to assess the children’s language background and proficiency. Inclusion criteria and definitions of language dominance were the same as in Experiment 1. There were  `r length(which(part_princeton$child.dom.lang == "English"))` English-dominant children and `r length(which(part_princeton$child.dom.lan == "Spanish"))` Spanish-dominant children. For Spanish, all children were exposed regularly from birth. For English, `r length(which(part_princeton$aoa.L2 == 0))` were exposed regularly from birth (i.e., were simultaneous bilinguals), `r length(which(part_princeton$aoa.L2 > 0 & part_princeton$aoa.L2 < 13))` were exposed after birth but within the first year of life, and `r length(which(part_princeton$aoa.L2 > 13))` were exposed between 12 and `r max(part_princeton$aoa.L2)` months. Another `r nrow(excl_princeton)` children were tested but not included in the final sample due to not meeting pre-established inclusion criteria for bilingual exposure (*n* = `r length(which(excl_princeton$exclusion == "language"))`) or reported language delay (*n* = `r length(which(excl_princeton$exclusion == "speech delay"))`).
 
-As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2014].  The average score in this sample was `r round(mean(part_princeton$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_princeton$lang.mix, na.rm = TRUE),1)` - `r round(max(part_princeton$lang.mix, na.rm = TRUE),1)`). This was not statistically different from the amount of mixing reported by parents in Experiment 1 [`r apa_print(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r cohens_d(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
+As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2014].  The average score in this sample was `r round(mean(part_princeton$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_princeton$lang.mix, na.rm = TRUE),1)` - `r round(max(part_princeton$lang.mix, na.rm = TRUE),1)`). This was not statistically different from the amount of mixing reported by parents in Experiment 1 who had a mean of `r round(mean(part_montreal$lang.mix, na.rm = TRUE),1)` [`r apa_print(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r cohens_d(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
 
 Socioeconomic status was assessed via mothers' highest educational attainment: `r length(which(part_princeton$maternal.education == "graduate"))` had completed a graduate degree, `r length(which(part_princeton$maternal.education == "some_uni"))` had completed some university, `r length(which(part_princeton$maternal.education == "high_school"))` had completed high school, `r length(which(part_princeton$maternal.education == "no_high"))` had not completed high school, and `r sum(is.na(part_princeton$maternal.education))` did not report. That is, among those reporting, 56% of mothers of Spanish-English bilingual children had completed education beyond high school; in contrast, 95% of mothers of French-English bilingual children had done so. Thus, we infer that the sample of Spanish-English bilingual children was of lower socioeconomic status than the sample of French-English bilingual children.
 
@@ -987,11 +994,11 @@ As in Experiment 1, children’s productive vocabulary size in English was asses
 
 ### Stimuli
 
-Auditory stimuli for Experiment 2 were equivalently structured to those used in Experiment 1, and were created with the same constraints (i.e., bisyllabic, different phonological onsets, different rhymes, and sounded masculine in Spanish grammatical gender). Sentences were produced by a female Spanish-English bilingual speaker (e.g., “Look! Do you see the dog/*perro* on the teelo?” / *“¡Mira! ¿Puedes ver el perro/*dog* encima del teelo?”*). All other aspects of the stimuli were identical to Experiment 1. As in Experiment 1, the language of the carrier phrase was consistent for each child (e.g., always in Spanish or always in English). Children were randomly assigned to the language of testing: `r length(which(part_princeton$carrier.dominant == "dominant"))` children were tested in their dominant language, and `r length(which(part_princeton$carrier.dominant == "non-dominant"))` were tested in their non-dominant language.
+Auditory stimuli for Experiment 2 were equivalently structured to those used in Experiment 1, and were created with the same constraints (i.e., different phonological onsets, different rhymes, and sounded masculine in Spanish grammatical gender). Sentences were produced by a female Spanish-English bilingual speaker (e.g., “Look! Do you see the dog/*perro* on the teelo?” / *“¡Mira! ¿Puedes ver el perro/*dog *encima del teelo?”*). All other aspects of the stimuli were identical to Experiment 1. As in Experiment 1, the language of the carrier phrase was consistent for each child (e.g., always in Spanish or always in English). Children were randomly assigned to the language of testing: `r length(which(part_princeton$carrier.dominant == "dominant"))` children were tested in their dominant language, and `r length(which(part_princeton$carrier.dominant == "non-dominant"))` were tested in their non-dominant language.
 
-### Procedure and Reliability Coding
+### Procedure and reliability coding
 
-The procedure was similar to Experiment 1. Children sat on their parent's lap, who wore occluded glasses and headphones with music to blind them to trial type. Children viewed stimuli approximately 70 cm from a large, flat-screen television monitor (68 x 122 cm). As no eye tracker was available at the location of data collection, the experimenter recorded infants’ eye movements via a video camera below the screen, which had a frame-rate of 29.97 Hz.  Research comparing automatic eye -tracking to manual coding suggests that the latter results in less data loss, but overall patterns of looking are similar across the two approaches [@venker_2020]. After testing, a researcher who was unaware of the experimental condition coded eye movements, indicating the direction of looks as: left, right, shifting, or away. Another researcher also coded 25% of the videos. Inter-coder reliability was 98.7% across all video frames, and 97.5% for video frames surrounding only shift events.
+The procedure was similar to Experiment 1. Children sat on their parent's lap, who wore occluded glasses and headphones with music so that they were unaware of the stimuli. Children viewed stimuli approximately 70 cm from a large, flat-screen television monitor (68 x 122 cm). As no eye tracker was available at the location of data collection, the experimenter recorded children's eye movements via a video camera below the screen, which had a frame-rate of 29.97 Hz.  Research comparing automatic eye -tracking to manual coding suggests that the latter results in less data loss, but overall patterns of looking are similar across the two approaches [@venker_2020]. After testing, a researcher who was unaware of the experimental condition coded eye movements, indicating the direction of looks as: left, right, shifting, or away. Another researcher also coded 25% of the videos. Inter-coder reliability was 98.7% across all video frames, and 97.5% for video frames surrounding only shift events.
 
 
 ## Results
@@ -1003,7 +1010,7 @@ Analyses for Experiment 2 were similar to those for Experiment 1, focusing on ch
 Overall, children in Experiment 2 appeared unsuccessful at learning either word, as displayed in Figure \@ref(fig:test-figure2). Two-tailed single-samples *t*-tests showed that children's looking to the target object was not  significantly different from chance (.5) for the novel object heard in single-language sentences, [*M* = `r single_mean2`, *SD* = `r single_se2`, *t*(`r test_chance2$parameter[2]`) = `r test_chance2$statistic[2] `, *p* = `r test_chance2$p.value[2]`, *d* = `r test_chance2$cohen_d[2]`] or in mixed-language sentences, [*M* = `r mixed_mean2`, *SD* = `r mixed_se2`, *t*(`r test_chance2$parameter[1]`) = `r test_chance2$statistic[1] `, *p* = `r round(test_chance2$p.value[1], 3)`, *d* = `r test_chance2$cohen_d[1]`].  A two-tailed paired-samples *t*-test confirmed that children showed similar looking to the target novel objects heard in the single-language and mixed-language sentences, [*t*(`r test_paired$parameter`) = `r round(test_paired$statistic,2) `, *p* = `r round(test_paired$p.value, 2)`, *d* = `r round(test_paired$cohen_d,2)`]. 
 
 
-```{r test-figure2, include = TRUE, fig.cap = "Proportion looking to target object for Spanish-English bilinguals (Experiment 2). Bars represent standard error of the mean."}
+```{r test-figure2, include = TRUE, fig.cap = "Average proportion looking to target object for Spanish-English bilinguals (Experiment 2). Cirlces show individual datapoints. Bars represent standard error of the mean."}
 ## TEST SPANISH-ENGLISH: Figure bargraph results
 
 test_agg2 %>%
@@ -1014,7 +1021,7 @@ test_agg2 %>%
   geom_errorbar(aes(ymin = target.mean + SE, ymax = target.mean - SE), 
                 width = .2,
                 position = position_dodge(.9)) +
-  labs(y = "Proportion target looking", x ="Trial type") +
+  labs(y = "Proportion target looking", x ="Sentence type") +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         axis.text = element_text(size=16),
@@ -1093,7 +1100,9 @@ training_agg2 <- response_window_agg_by_sub_training2_with_distractor %>% # Get 
   summarise(mean = mean(Prop), sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = sd/sqrt(n)) %>%
   mutate_if(is.numeric, funs(signif(., 3))) %>%
-  select(target.type, sentence.type, familiarity, mean, sd)
+  select(target.type, sentence.type, familiarity, mean, sd) %>%
+  mutate(sentence.type = str_to_lower(sentence.type)) %>%
+  rename("target type" = target.type, "sentence type" = sentence.type)
 
 
 ```
@@ -1102,7 +1111,7 @@ training_agg2 <- response_window_agg_by_sub_training2_with_distractor %>% # Get 
 
 
 ```{r include = FALSE}
-## TRAINING SPANISH-ENGLISH: Run t-tests for phase by trial type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
+## TRAINING SPANISH-ENGLISH: Run t-tests for phase by sentence type, see https://cran.r-project.org/web/packages/broom/vignettes/broom_and_dplyr.html. 
 
 (test_paired <- response_window_agg_by_sub_training2 %>%
   do(broom::tidy(t.test(.$Prop ~ .$sentence.type, data = ., paired = TRUE))) %>%
@@ -1201,7 +1210,7 @@ response_time_summarized_training2 <- make_time_sequence_data(response_window_cl
 
 ### Learning phase
 
-In these analyses, we investigated whether children’s apparently unsuccessful learning of the novel words was due to difficulty locating the labeled referent. Because data in Experiment 2 were coded by humans rather than an eye tracker, children’s looks were coded in terms of whether looking was at the target familiar-novel combination of objects or at the distractor familiar-novel combination of objects; finer resolution to the area of interest surrounding each familiar and novel object was not possible, which is a limitation of hand coding relative to eye-tracking. Children contributed an average of `r num_training_trials[[2,2]] ` single-language trials (range: `r num_training_trials2[[2,3]] `– `r num_training_trials2[[2,4]] `) and `r num_training_trials2[[1,2]] ` mixed-language trials (range: `r num_training_trials2[[1,3]] `– `r num_training_trials2[[1,4]] `)  out of 6 possible trials per type. Means and standard deviations of proportion looking to each object type (target familiar, target novel, distractor familiar, distractor novel) during single-language and mixed-language sentences are displayed in Table \@ref(tab:training-descriptives-table2).
+In these analyses, we investigated whether children’s apparently unsuccessful learning of the novel words was due to difficulty locating the labeled referent during the learning phase. Because data in Experiment 2 were coded by humans rather than an eye tracker, children’s looks were coded in terms of whether looking was at the target familiar-novel combination of objects or at the distractor familiar-novel combination of objects; finer resolution to the area of interest surrounding each familiar and novel object was not possible, which is a limitation of hand coding relative to eye-tracking. Children contributed an average of `r num_training_trials[[2,2]] ` single-language trials (range: `r num_training_trials2[[2,3]] `– `r num_training_trials2[[2,4]] `) and `r num_training_trials2[[1,2]] ` mixed-language trials (range: `r num_training_trials2[[1,3]] `– `r num_training_trials2[[1,4]] `)  out of 6 possible trials per type. Means and standard deviations of proportion looking to each object type (target familiar, target novel, distractor familiar, distractor novel) during single-language and mixed-language sentences are displayed in Table \@ref(tab:training-descriptives-table2).
 
 ```{r training-descriptives-table2, echo = FALSE, include = TRUE, results = "asis"}
 
@@ -1211,9 +1220,9 @@ apa_table(training_agg2, digits = 2, caption = "Spanish-English bilinguals (Expe
 
 
 
-A two-tailed, paired-samples *t*-test showed that children's attention to the target was similar for the single-language and mixed-language sentences, [`r apa_print(training_ttest2)$statistic`, *d* = `r cohens_d(training_ttest2)`].  Children's looking to the target side was significantly above chance during both single-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`,`r apa_print(training_ttest_single2)$statistic`, *d* = `r cohens_d(training_ttest_single2)`] and mixed-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`,`r apa_print(training_ttest_mixed2)$statistic`, *d* = `r cohens_d(training_ttest_mixed2)`]. Time course plots shown in Figure \@ref(fig:training-timecourse-figure2) confirm that children showed similar increases in looking to the labeled objects after naming for both trial types. This indicated that language mixing did not affect children’s success in orienting to the labeled object during the learning phase.
+A two-tailed, paired-samples *t*-test showed that children's attention to the target was similar for the single-language and mixed-language sentences, [`r apa_print(training_ttest2)$statistic`, *d* = `r cohens_d(training_ttest2)`].  Children's looking to the target side was significantly above chance during both single-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`,`r apa_print(training_ttest_single2)$statistic`, *d* = `r cohens_d(training_ttest_single2)`] and mixed-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`,`r apa_print(training_ttest_mixed2)$statistic`, *d* = `r cohens_d(training_ttest_mixed2)`]. Time course plots shown in Figure \@ref(fig:training-timecourse-figure2) confirm that children showed similar increases in looking to the labeled objects after naming for both sentence types. This indicated that language mixing did not affect children’s success in orienting to the labeled object during the learning phase.
 
-```{r training-timecourse-figure2, include = TRUE, fig.cap = "Timecourse of looking to target during training trials for Spanish-English bilinguals (Experiment 2)."}
+```{r training-timecourse-figure2, include = TRUE, fig.cap = "Timecourse of looking to target during learning trials for Spanish-English bilinguals (Experiment 2)."}
 ## TRAINING SPANISH-ENGLISH: Timecourse figure
 
  training_timecourse_figure2 <- response_time_summarized_training2 %>%
@@ -1264,6 +1273,13 @@ response_window_agg_by_sub_test_all <- full_join(response_window_agg_by_sub_test
         type = 3,
         detailed = TRUE,
         )
+ 
+ test_anova_all_table <- test_anova_all$ANOVA %>%
+   mutate(Effect = recode(Effect, sentence.type = "sentence type", `population:sentence.type` = "population * sentence type"))
+ 
+ 
+int_p <- round(test_anova_all$ANOVA[[4,7]],2) # near-significant p-value for interaction
+
 
 ```
 
@@ -1280,15 +1296,19 @@ training_anova_all <-  ezANOVA(data = response_window_agg_by_sub_training_all,
         detailed = TRUE
         )
 
+training_anova_all_table <- training_anova_all$ANOVA %>%
+   mutate(Effect = recode(Effect, sentence.type = "sentence type", `population:sentence.type` = "population * sentence type"))
+
 training_anova_all 
+
 
 ```
 
-Next, we compared the French-English (Experiment 1) and Spanish-English (Experiment 2) bilingual children directly. First, we examined performance during the test phase in a 2 (population: French-English, Spanish-English) x 2 (sentence type: single-language, mixed-language) mixed ANOVA (Table \@ref(tab:test-comparison-anova-table)). The largest observed effect was an interaction of population and sentence type, which was expected as French-English bilinguals looked longer at the novel target that had been encountered in single-language trials than in mixed-language trials, but Spanish-English bilinguals showed similar looking to the targets regardless of of the presence or absence of mixing. However, this interaction failed to achieve statistical significance.
+Next, we compared the French-English (Experiment 1) and Spanish-English (Experiment 2) bilingual children directly. First, we examined performance during the test phase in a 2 (population: French-English, Spanish-English) x 2 (sentence type: single-language, mixed-language) mixed ANOVA (Table \@ref(tab:test-comparison-anova-table)). The largest observed effect was an interaction of population and sentence type, which was expected as French-English bilinguals looked longer at the novel target that had been encountered in single-language trials than in mixed-language trials, but Spanish-English bilinguals showed similar looking to the targets regardless of of the presence or absence of mixing. However, this interaction failed to achieve statistical significance (*p* = `r int_p `).
 
 ```{r test-comparison-anova-table, include = TRUE, results = "asis"}
 
-apa_table(test_anova_all$ANOVA, digits = 2, caption = "Comparison of French-English (Experiment 1) and Spanish-English (Experiment 2) bilinguals' performance during the test phase.")
+apa_table(test_anova_all_table, digits = 2, caption = "Comparison of French-English (Experiment 1) and Spanish-English (Experiment 2) bilinguals' performance during the test phase.")
 
 ```
 
@@ -1300,13 +1320,10 @@ Second, we examined performance during the learning phase. A 2 (population: Fren
 
 ```{r training-comparison-anova-table, include = TRUE, results = "asis"}
 
-apa_table(training_anova_all$ANOVA, digits = 2, caption = "Comparison of French-English (Experiment 1) and Spanish-English (Experiment 2) bilinguals' performance during the learning phase.")
+apa_table(training_anova_all_table, digits = 2, caption = "Comparison of French-English (Experiment 1) and Spanish-English (Experiment 2) bilinguals' performance during the learning phase.")
 
 ```
 
-## Exploration of individual differences
-
-In this section, we combined datasets from the two populations to explore potential individual differences in performance.
 
 ```{r ind-differences-training-test, include = FALSE}
 ## French-English relationship between training and test
@@ -1322,21 +1339,21 @@ response_window_agg_by_sub_training_targ <- make_time_window_data(response_windo
 
 
 training_trials <- response_window_agg_by_sub_training_targ %>%
-  rename(prop_training = Prop) %>%
-  select(id, population, sentence.type, prop_training) %>%
+  rename(prop.learning = Prop) %>%
+  select(id, population, sentence.type, prop.learning) %>%
   as.data.frame()
 
 
 test_trials <- response_window_agg_by_sub_test %>%
-  rename(prop_test = Prop) %>%
-  select(id, sentence.type, prop_test)%>%
+  rename(prop.test = Prop) %>%
+  select(id, sentence.type, prop.test)%>%
   as.data.frame()
 
 test_training_wide <- training_trials %>%
   left_join(test_trials)
 
 
-correl_plot <- ggplot(test_training_wide , aes(x = prop_training, y = prop_test)) +
+correl_plot <- ggplot(test_training_wide , aes(x = prop.learning, y = prop.test)) +
   geom_point(aes(color = sentence.type)) +
   geom_smooth(aes(color = sentence.type), method = "lm") +
   geom_smooth(method = "lm", color = "black")
@@ -1344,15 +1361,15 @@ correl_plot <- ggplot(test_training_wide , aes(x = prop_training, y = prop_test)
 
 # Overall correlation
 
-cor.mixed <- cor.test(test_training_wide[test_training_wide$sentence.type == "Mixed",]$prop_test, test_training_wide[test_training_wide$sentence.type == "Mixed",]$prop_training)
-cor.single <- cor.test(test_training_wide[test_training_wide$sentence.type == "Single",]$prop_test, test_training_wide[test_training_wide$sentence.type == "Single",]$prop_training)
+cor.mixed <- cor.test(test_training_wide[test_training_wide$sentence.type == "Mixed",]$prop.test, test_training_wide[test_training_wide$sentence.type == "Mixed",]$prop.learning)
+cor.single <- cor.test(test_training_wide[test_training_wide$sentence.type == "Single",]$prop.test, test_training_wide[test_training_wide$sentence.type == "Single",]$prop.learning)
 
 # lmer French-English
-test_training_model <- lmer(prop_test ~ prop_training*sentence.type + (1|id), data = test_training_wide)
+test_training_model <- lmer(prop.test ~ prop.learning*sentence.type + (1|id), data = test_training_wide)
 
 summary(test_training_model)
 
-test_training_model_simpler <- lmer(prop_test ~ prop_training +sentence.type + (1|id), data = test_training_wide)
+test_training_model_simpler <- lmer(prop.test ~ prop.learning +sentence.type + (1|id), data = test_training_wide)
 
 summary(test_training_model_simpler)
 
@@ -1362,19 +1379,19 @@ anova(test_training_model, test_training_model_simpler) #Compare the models. Int
 ### New Jersey ###
 
 training_trials2 <- response_window_agg_by_sub_training2 %>%
-  rename(prop_training = Prop) %>%
-  select(id, population, sentence.type, prop_training) %>%
+  rename(prop.learning = Prop) %>%
+  select(id, population, sentence.type, prop.learning) %>%
   as.data.frame()
 
 test_trials2 <- response_window_agg_by_sub_test2 %>%
-  rename(prop_test = Prop) %>%
-  select(id, sentence.type, prop_test)%>%
+  rename(prop.test = Prop) %>%
+  select(id, sentence.type, prop.test)%>%
   as.data.frame()
 
 test_training_wide2 <- training_trials2 %>%
   left_join(test_trials2)
 
-correl_plot2 <- ggplot(test_training_wide2 , aes(x = prop_training, y = prop_test)) +
+correl_plot2 <- ggplot(test_training_wide2 , aes(x = prop.learning, y = prop.test)) +
   geom_point(aes(color = sentence.type)) +
   geom_smooth(aes(color = sentence.type), method = "lm") +
   geom_smooth(method = "lm", color = "black")
@@ -1382,16 +1399,16 @@ correl_plot2 <- ggplot(test_training_wide2 , aes(x = prop_training, y = prop_tes
 
 # Overall correlation
 
-cor.mixed2 <- cor.test(test_training_wide2[test_training_wide2$sentence.type == "Mixed",]$prop_test, test_training_wide2[test_training_wide2$sentence.type == "Mixed",]$prop_training)
-cor.single2 <- cor.test(test_training_wide2[test_training_wide2$sentence.type == "Single",]$prop_test, test_training_wide2[test_training_wide2$sentence.type == "Single",]$prop_training)
+cor.mixed2 <- cor.test(test_training_wide2[test_training_wide2$sentence.type == "Mixed",]$prop.test, test_training_wide2[test_training_wide2$sentence.type == "Mixed",]$prop.learning)
+cor.single2 <- cor.test(test_training_wide2[test_training_wide2$sentence.type == "Single",]$prop.test, test_training_wide2[test_training_wide2$sentence.type == "Single",]$prop.learning)
 
 
 # lmer Spanish-English
-test_training_model2 <- lmer(prop_test ~ prop_training*sentence.type + (1|id), data = test_training_wide2) #interaction with sentence type
+test_training_model2 <- lmer(prop.test ~ prop.learning*sentence.type + (1|id), data = test_training_wide2) #interaction with sentence type
 
 summary(test_training_model2)
 
-test_training_model_simpler2 <- lmer(prop_test ~ prop_training +sentence.type + (1|id), data = test_training_wide2) # no interaction with sentence type, only main effects
+test_training_model_simpler2 <- lmer(prop.test ~ prop.learning +sentence.type + (1|id), data = test_training_wide2) # no interaction with sentence type, only main effects
 
 summary(test_training_model_simpler2)
 
@@ -1405,7 +1422,7 @@ test_training_wide_both <- rbind(test_training_wide, test_training_wide2) %>%
 # Figure for relationship between performance at training and at test
 
 comb_correl_plot <- test_training_wide_both %>%
-  ggplot(aes(x = prop_training, y = prop_test)) +
+  ggplot(aes(x = prop.learning, y = prop.test)) +
   geom_point(aes(color = sentence.type, shape = sentence.type)) +
   geom_smooth(aes(color = sentence.type, lty = sentence.type), method = "lm", se = FALSE) +
  # geom_smooth(method = "lm", color = "black", se = FALSE) +
@@ -1413,7 +1430,7 @@ comb_correl_plot <- test_training_wide_both %>%
   facet_grid(. ~ population) +
   theme_minimal() +
   coord_fixed() +
-  labs(y = "Test: Proportion target looking", x ="Training: Proportion target looking") +
+  labs(y = "Test: Proportion target looking", x ="Learning phase: Proportion target looking") +
   scale_color_manual(name = "Sentence type", values =c("#377eb8", "#e41a1c"))+
   scale_linetype(name = "Sentence type") +
   scale_shape(name = "Sentence type") +
@@ -1426,16 +1443,16 @@ comb_correl_plot <- test_training_wide_both %>%
         panel.background = element_blank(),
         strip.background = element_blank(),
         panel.spacing = unit(2, "lines")) +
-      ggtitle("Relationship between training and test performance")
+      ggtitle("Relationship between learning phase and test performance")
 
 
-## Two group lmer. Conclusions: Infants who do better at training do better test. French-English bilinguals do overall better on single-language trials than Spanish-English
+## Two group lmer. Conclusions: Children who do better at training do better test. French-English bilinguals do overall better on single-language trials than Spanish-English
 
-test_training_model_group <- lmer(prop_test ~ prop_training*sentence.type*population + (1|id), data = test_training_wide_both) # full interactions
+test_training_model_group <- lmer(prop.test ~ prop.learning*sentence.type*population + (1|id), data = test_training_wide_both) # full interactions
 
 summary(test_training_model_group)
 
-test_training_model_group_simpler <- lmer(prop_test ~ prop_training + sentence.type*population + (1|id), data = test_training_wide_both) #only interaction between sentence type and population
+test_training_model_group_simpler <- lmer(prop.test ~ prop.learning + sentence.type*population + (1|id), data = test_training_wide_both) #only interaction between sentence type and population
 
 summary(test_training_model_group_simpler)
 
@@ -1443,15 +1460,15 @@ anova(test_training_model_group_simpler, test_training_model_group)
 
 ```
 
-### Relationship between training and test performance
+### Relationship between learning phase and test performance
 
-We examined whether performance at test was predicted by performance during training, exploring whether this relationship was moderated by sentence type (single-language, mixed-language) and population (French-English, Spanish-English). Scatterplots visualizing these relationships are shown in Figure \@ref(fig:correl-figure)). Because one of our predictors was continuous rather than categorical (performance during training), we moved from the ANOVA framework used in the previous analyses to a linear mixed-effects model framework. This approach had the additional benefit of modeling the data at an individual trial level, which could potentially increase statistical power. Based on our previous results, our model included fixed effects of performance during training, sentence type, and population, the interaction between sentence type and population (since French-English but not Spanish-English toddlers showed difference performance by sentence type), as well as random slopes by participants (results are show in Table \@ref(tab:lmem)). The reference level for population was French-English bilinguals, and the reference level for sentence type was single-language. The model equation was prop_test ~ prop_training + sentence.type*population + (1|id). 
+In the next two sections, we combined datasets from the two populations to explore potential individual differences in performance. First, we examined whether performance at test was predicted by performance during the learning phase, exploring whether this relationship was moderated by sentence type (single-language, mixed-language) and population (French-English, Spanish-English). Scatterplots visualizing these relationships are shown in Figure \@ref(fig:correl-figure). Because one of our predictors was continuous rather than categorical (performance during learning), we moved from the ANOVA framework used in the previous analyses to a linear mixed-effects model framework. This approach had the additional benefit of modeling the data at an individual trial level, which could potentially increase statistical power. Based on our previous results, our model included fixed effects of performance during the learning phase, sentence type, and population, the interaction between sentence type and population (since French-English but not Spanish-English toddlers showed difference performance by sentence type), as well as random slopes by participants. Results are show in Table \@ref(tab:lmem). The reference level for population was French-English bilinguals, and the reference level for sentence type was single-language. The model equation was prop.test ~ prop.learning + sentence.type*population + (1|id). 
 
-The analysis revealed a significant main effect of training, revealing that toddlers who performed better during training performed better at test. There was also a significant interaction between sentence type and population, replicating the finding from our previous analysis that French-English bilinguals did better on single-language than mixed-language trials than single-language trials, but that Spanish-English toddlers performed similarly on both trial types. This is also reflected in the significant main effect of sentence type, which is interpreted at the reference level of French-English bilinguals. We compared this model to a larger model that included interactions of all predictors, but found no evidence that the more complicated model was a significantly better fit to the data, based on a chi-squared test comparing the models.
+The analysis revealed a significant main effect of performance during the learning phase, revealing that toddlers who performed better during the learning phase performed better at test. There was also a significant interaction between sentence type and population, replicating the finding from our previous analysis that French-English bilinguals did better on single-language than mixed-language trials than single-language trials, but that Spanish-English toddlers performed similarly on both sentence types. This is also reflected in the significant main effect of sentence type, which is interpreted at the reference level of French-English bilinguals. We compared this model to a larger model that included interactions of all predictors, but found no evidence that the more complicated model was a significantly better fit to the data, based on a chi-squared test comparing the models.
 
 
 
-```{r correl-figure, include = TRUE, fig.cap = "Scatterplot showing performance on training and peformance at test by population and trial type. Lines represent best linear fit."}
+```{r correl-figure, include = TRUE, fig.cap = "Scatterplot showing performance during the learning phase and peformance at test by population and sentence type. Lines represent best linear fit."}
 comb_correl_plot
 ```
 
@@ -1459,7 +1476,7 @@ comb_correl_plot
 
 # Creating table for lmem results
 
-Variable <- c("intercept", "proportion target training", "sentence type (Mixed)", "population (Spanish-English)", "sentence type * population")
+Variable <- c("intercept", "proportion target learning", "sentence type (mixed)", "population (Spanish-English)", "sentence type * population")
 
 rownames <- as.data.frame(Variable)
 
@@ -1476,7 +1493,7 @@ coefs <- summary(test_training_model_group_simpler)$coef %>%
 coefs_table <- bind_cols(rownames, coefs)
 
 
-apa_table(coefs_table, digits = 3, caption = "Linear mixed model testing effects of population, sentence type, and performance during training on performance at test.")
+apa_table(coefs_table, digits = 3, caption = "Linear mixed effects model testing effects of population, sentence type, and performance during the learning phase on performance at test.")
 
 
 
@@ -1572,7 +1589,7 @@ all_corr_test <- response_window_agg_by_sub_test_sub %>%
   bind_rows(grouped_corr_test) %>%
   mutate(phase = "Test")
 
-# Correlations with training
+# Correlations with learning
 grouped_corr_training <- response_window_agg_by_sub_training_sub %>%
   group_by(population) %>%
   rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix)
@@ -1595,16 +1612,18 @@ all_corr <- bind_rows(all_corr_training, all_corr_test) %>%
     arrange(phase, population, Variable, r, p) %>%
   mutate(phase = fct_rev(phase)) %>%
   mutate(population = recode(population, Montreal = "French-English", `New Jersey` = "Spanish-English")) %>%
-  rename(Phase = phase) %>%
-  mutate(Variable = recode(Variable, lang.mix = "Language mixing", vocab.dom = "Dominant language vocabulary", vocab.nondom = "Non-dominant language vocabulary", vocab.total = "Total vocabulary"))
-
+  rename(variable = Variable) %>%
+  mutate(phase = str_to_lower(phase)) %>%
+  mutate(phase = recode(phase, training = "learning")) %>%
+  mutate(variable = recode(variable, lang.mix ="language mixing", vocab.dom = "dominant language vocabulary", vocab.nondom = "non-dominant language vocabulary", vocab.total = "total vocabulary"))
+  
 min_corr <- min(all_corr$r)
 max_corr <- max(all_corr$r)
 min_p <- min(all_corr$p)
 n_corr <- nrow(all_corr)
 
 all_corr_wide <- all_corr %>%
-  pivot_wider(id_cols = c(Phase, population, Variable), names_from = population, values_from = c(r), names_sep = " ")
+  pivot_wider(id_cols = c(phase, population, variable), names_from = population, values_from = c(r), names_sep = " ")
 
 
 
@@ -1613,7 +1632,7 @@ all_corr_wide <- all_corr %>%
 
 ### Individual differences
 
-Next, we examined whether performance was vocabulary knowledge (dominant language vocabulary, non-dominant language vocabulary, and total vocabulary) or exposure to language mixing. To fully explore the data, we computed correlations separately for training and test phases, both for each population separately as well as for the whole sample combined. Thus, a total of `r n_corr` different correlations were computed (see Table \@ref(tab:corr-table)). None of the correlations approached statistical significance, even prior to controlling for multiple comparisons (ps ⩾ `r min_p`).
+Next, we examined whether performance was related to vocabulary knowledge (dominant language vocabulary, non-dominant language vocabulary, and total vocabulary) or exposure to language mixing. To fully explore the data, we computed correlations separately for learning and test phases, both for each population separately as well as for the whole sample combined. Thus, a total of `r n_corr` different correlations were computed (see Table \@ref(tab:corr-table)). None of the correlations approached statistical significance, even without controlling for multiple comparisons (ps ⩾ `r min_p`).
 
 
 ```{r corr-table, results = "asis", include = TRUE}
@@ -1623,7 +1642,7 @@ apa_table(all_corr_wide, caption = "Correlations with proportion target looking.
 
 # General discussion
 
-We tested whether and how language mixing affects novel word learning in 3-year-old bilingual children from two language communities: French-English bilinguals in [omitted], and Spanish-English bilinguals in [omitted]. Children viewed pairs of familiar animals, each perched atop different novel objects, and had the opportunity to learn two novel words. One novel word was consistently encountered within single-language sentences (e.g., “Look! Do you see the dog on the teelo?”), and one was consistently encountered within mixed-language sentences (e.g., “Look! Do you see the *chien/perro* on the teelo?”). This design required children to first identify the familiar referent in order to then locate the referent of the target novel noun. At test, children saw the two novel objects without the familiar objects, and a sentence directed their attention to the target.
+We tested whether and how language mixing affects novel word learning in 3-year-old bilingual children from two language communities: French-English bilinguals in Montreal, and Spanish-English bilinguals in New Jersey. Children viewed pairs of familiar animals, each perched atop different novel objects, and had the opportunity to learn two novel words. One novel word was consistently encountered within single-language sentences (e.g., “Look! Do you see the dog on the teelo?”), and one was consistently encountered within mixed-language sentences (e.g., “Look! Do you see the *chien/perro* on the teelo?”). This design required children to first identify the familiar referent in order to then locate the referent of the target novel noun. At test, children saw the two novel objects without the familiar objects, and a sentence directed their attention to the target.
 
 Children’s accuracy in learning novel words differed across the two language communities. French-English bilingual children successfully recognized the word that had been encountered in single-language sentences, but not the word encountered in mixed-language sentences. However, Spanish-English bilingual children did not recognize the word encountered in either context. Results from French-English bilinguals support the hypothesis that language mixing can (at least sometimes) disrupt initial encoding of novel words.
 
@@ -1631,11 +1650,11 @@ Our investigation was motivated by the idea that language mixing can sometimes d
 
 Samuelson and colleagues [-@horst_2008; -@samuelson_2017] make an important distinction between two phases in word learning. The first phase is referent selection: determining the likely referent of a novel word. The second phase is retention: linking the sound of the novel word to its meaning. A number of recent studies have shown that these are dissociable processes in word learning, as children sometimes look toward the correct referent without recognizing the word later [@bion_2013; @horst_2008; @oconnell_2009]. Our findings – using the quite distinct domain of language mixing – confirm the dissociable nature of these two components of word learning. That is, during the learning phase, children looked toward the labeled object in all contexts, but only French-English bilinguals showed successful word learning, and only in the single-language context.
 
-The cognitive demands of our word learning task might have contributed to children’s overall difficulty with word learning. First, our learning phase presented children with complex visual scenes involving two familiar and two novel objects, which we had modeled on previous research with monolingual English-learners of this age [@fernald_2008]. However, some studies have suggested that the presence of multiple objects can make word learning challenging. For example, Horst and Samuelson [-@horst_2008] presented 24-month-old monolingual children with three objects: two familiar objects (e.g., car, cow) and one novel object (e.g., ‘splicket’). They instructed children to “Look at the splicket! Which one is the splicket?” Children’s knowledge of the familiar objects helped them identify the novel object as the referent of the novel word (i.e., referent selection), yet when tested they did not appear to retain this link (i.e., retention). Only when provided with additional cues that heightened the novel object’s salience, such as ostensive naming, did infants retain the label. The authors suggested that although the familiar objects helped children identify the novel object, they also competed as possible referents for the novel word. Such complexity was also present in our design. On each learning trial, infants not only encountered the target referent (e.g., teelo), but also three other competitors: the familiar target (e.g., dog), the familiar distractor (e.g., bunny), and the novel distractor (e.g., walem). Moreover, when children heard “Look! Do you see the dog on the teelo?”, they had to infer that the teelo was the object underneath the dog – an additional processing step that might have made the task especially challenging for some children [see @bion_2013; @horst_2008; @goodman_1998; and @carey_1978 for studies that required children to make comparable inferences]. Our results converge with this theoretical framework, as for both French-English and Spanish-English bilinguals, children who spent more time looking at the labeled object during training performed better at test.
+The cognitive demands of our word learning task might have contributed to children’s overall difficulty with word learning. First, our learning phase presented children with complex visual scenes involving two familiar and two novel objects, which we had modeled on previous research with monolingual English-learners of this age [@fernald_2008]. However, some studies have suggested that the presence of multiple objects can make word learning challenging. For example, Horst and Samuelson [-@horst_2008] presented 24-month-old monolingual children with three objects: two familiar objects (e.g., car, cow) and one novel object (e.g., ‘splicket’). They instructed children to “Look at the splicket! Which one is the splicket?” Children’s knowledge of the familiar objects helped them identify the novel object as the referent of the novel word (i.e., referent selection), yet when tested they did not appear to retain this link (i.e., retention). Only when provided with additional cues that heightened the novel object’s salience, such as ostensive naming, did children retain the label. The authors suggested that although the familiar objects helped children identify the novel object, they also competed as possible referents for the novel word. Such complexity was also present in our design. On each learning trial, children not only encountered the target referent (e.g., teelo), but also three other competitors: the familiar target (e.g., dog), the familiar distractor (e.g., bunny), and the novel distractor (e.g., walem). Moreover, when children heard “Look! Do you see the dog on the teelo?”, they had to infer that the teelo was the object underneath the dog – an additional processing step that might have made the task especially challenging for some children [see @bion_2013; @horst_2008; @goodman_1998; and @carey_1978 for studies that required children to make comparable inferences]. Our results converge with this theoretical framework, as for both French-English and Spanish-English bilinguals, children who spent more time looking at the labeled object during the learning phase performed better at test.
 
 In light of these design-related complexities, the data for Spanish-English versus French-English bilingual children merit special attention. Previous work has demonstrated that language mixing affects real-time word comprehension among children from both of these populations [@byersh_2017; @potter_2018; -@potter_2019]. Such comparisons are essential for evaluating the generalizability of findings across populations of bilingual learners. Spanish-English bilinguals did not learn words in single- or mixed-language sentences, yet it appears that French-English bilingual children were able to learn in the single-language condition. While both groups showed above-chance looking toward the target side during the learning phase, French-English bilinguals were more efficient in doing so. This likely gave French-English bilinguals more time to encode the word-referent link. However, we do not currently know why the two groups differed in their orientation behaviors during the learning phase. We cannot rule out the possibility that small differences in setups, stimuli, and coding approaches between the two labs contributed to our divergent findings, although we took as many steps as possible to minimize these differences. However, both labs have a history of detecting subtle processing effects in related paradigms with both bilinguals and monolinguals of this approximate age.  
 
-We believe that the differences we observed are likely to be attributable to differences between the populations themselves. Indeed, there are a wide range of differences between our two groups of learners, which collectively highlight the importance of examining multiple populations in bilingual research. In our dataset, the two samples were similar in terms of how much language mixing they encountered (according to parental report), although this still leaves open the possibility that they might encounter different types of language mixing, which could be either similar to or distinct from our stimuli. We did observe that the families of French-English bilingual participants were of higher average socioeconomic status than the Spanish-English bilinguals, and had higher vocabularies, and previous research points to socioeconomic status as an important influence on early language processing and vocabulary growth [e.g., @fernald_2013].  However, it is safe to assume that other dimensions of language experience which we were not able to measure directly also play a role in shaping bilingual learning. For example, we do not know how typical our chosen novel words were of other words in their vocabularies (even though the words were always pronounced with language-specific phonology). Moreover, these bilinguals’ learning takes place in different cultural milieus, with potentially different family-level and/or society-level differences in language attitudes. Research is needed to better understand the microstructure of language use in different bilingual households and different bilingual communities (including the communities studied here), and how these in turn affect children’s language processing and vocabulary growth over time. Efforts to understand variation in dual-language use across languages and cultures are currently underway in several countries [e.g., @carbajal_2020; @orena_2020], which will be critical for furthering knowledge about early bilingual development.
+We believe that the differences we observed are likely to be attributable to differences between the populations themselves. Indeed, there are a wide range of differences between our two groups of learners, which collectively highlight the importance of examining multiple populations in bilingual research. In our dataset, the two samples were similar in terms of how much language mixing they encountered (according to parental report), although this still leaves open the possibility that they might encounter different types of language mixing, which could be either similar to or distinct from our stimuli. We did observe that the families of French-English bilingual participants were of higher average socioeconomic status than the Spanish-English bilinguals, and had higher vocabularies, and previous research points to socioeconomic status as an important influence on early language processing and vocabulary growth [e.g., @fernald_2013], and theories of language acquisition may need to more explicitly consider interactions between bilingualism and socioeconomic status.  However, it is safe to assume that other dimensions of language experience which we were not able to measure directly also play a role in shaping bilingual learning. For example, we do not know how typical our chosen novel words were of other words in their vocabularies (even though the words were always pronounced with language-specific phonology). Moreover, these bilinguals’ learning takes place in different cultural milieus, with potentially different family-level and/or society-level differences in language attitudes. Research is needed to better understand the microstructure of language use in different bilingual households and different bilingual communities (including the communities studied here), and how these in turn affect children’s language processing and vocabulary growth over time. Efforts to understand variation in dual-language use across languages and cultures are currently underway in several countries [e.g., @carbajal_2020; @orena_2020], which will be critical for furthering knowledge about early bilingual development.
 
 Regarding the findings for French-English bilingual children, it is important to consider why the single-language sentences (relative to the mixed-language sentences) enabled encoding of the link between the novel word and its referent. In addition to children’s equal gaze to target referents during the learning phase, many factors were identical across these sentence contexts: the same number of objects was visible, the same competition between objects was at play, the same inferences were required in both cases, and the same word-object association demands were required. What differed was whether the label for the mid-sentence familiar animal did or did not match the language used in the rest of the sentence, and possibly whether that word appeared in the child’s dominant or non-dominant language. Why were French-English bilinguals unable to encode the word-referent link in the mixed-language condition?
 
@@ -1644,11 +1663,11 @@ One possibility is that language mixing could present ambiguity or confusion abo
 A second possibility is that bilingual children learn over time that language mixing does not offer an optimal moment for learning, and thus they either implicitly or explicitly disengage and/or do not encode novel words that appear in mixed-language sentences. Toddlers have been shown to apply at least some selectivity when learning words; for example, they prefer word labels that come from reliable over unreliable speakers [@mangardich_2018]. It may be that children interpret language mixing as a signal of a speaker’s uncertainty or unreliability in that moment, which may block efficient encoding of novel information. This possibility would need to be tested empirically in a future study that broadly examines children’s uptake of new information in communicative contexts with frequent vs. infrequent language mixing.
 
 
-Another approach to evaluating these contrasting – but complementary – ideas would be to teach children words in language-mixing contexts with simpler visuals than those used in the current design. For example, in an eye-tracking task, the child could view just one familiar-novel object pair at a time (e.g., a dog on a teelo, with no distractor), or only one novel object at a time, in isolation (e.g., only the teelo). Any heightened success in learning words under these simpler task demands would indicate that the cognitive load of the current design was too high. However, if language mixing is implicitly or explicitly perceived as a sub-optimal learning opportunity, children would avoid and/or show failure in learning a novel word that is presented in a mixed-language sentence, regardless of task complexity. Indeed, there is some evidence to support this possibility. In a study of Mandarin-English bilingual 18-month-olds using the Switch task (which presents one novel object at a time accompanied by an isolated label), children readily encoded words with full phonetic detail in a single-language context, but not in a switched-language context [@singh_2018].
+Another approach to evaluating these contrasting – but complementary – ideas would be to teach children words in language-mixing contexts with simpler visuals than those used in the current design. For example, in an eye-tracking task, the child could view just one familiar-novel object pair at a time (e.g., a dog on a teelo, with no distractor), or only one novel object at a time, in isolation (e.g., only the teelo). Any heightened success in learning words under these simpler task demands would indicate that the cognitive load of the current design was too high. However, if language mixing is implicitly or explicitly perceived as a sub-optimal learning opportunity, children would avoid learning and/or show failure to learn a novel word that is presented in a mixed-language sentence, regardless of task complexity. Indeed, there is some evidence to support this possibility. In a study of Mandarin-English bilingual 18-month-olds using the Switch task (which presents one novel object at a time accompanied by an isolated label), children readily encoded words with full phonetic detail in a single-language context, but not in a switched-language context [@singh_2018].
 
-It will also be important for future research to test the same question but in a range of language processing contexts, in order to better understand when code mixing does and does not impact word learning. In our study, children heard a code-mixed noun prior to encountering a novel word. However, code-mixing comes in many other forms, at different parts of the phrase, and for different parts of speech. Moreover, parents sometimes code-mixe by providing immediate translations of words and phrases, which is likely to reflect a conscious effort to teach their children new words [@byersh_2013; @kremin_2020].  In the end, it is likely that some types of code-mixing would actually support rather than derail word learning (e.g., @read_2020).
+It will also be important for future research to test the same question but in a range of language processing contexts, in order to better understand when code mixing does and does not impact word learning. In our study, children heard a code-mixed noun prior to encountering a novel word. However, code-mixing comes in many other forms, at different parts of the phrase, and for different parts of speech. Moreover, parents sometimes code-mixe by providing immediate translations of words and phrases, which is likely to reflect a conscious effort to teach their children new words [@byersh_2013; @kremin_2020].  In the end, it is likely that some types of code-mixing would actually support rather than derail word learning [e.g., @read_2020].
 
-To conclude, this research provides two main contributions to existing research. First, the data suggest that language mixing can sometimes hinder bilingual children’s learning of new words that occur downstream, but leave open important questions as to why. Second, the two experiments show that different populations of bilingual children sometimes perform differently on equivalent language tasks. This highlights the need for caution in generalizing findings to bilinguals in general, and calls for an increased practice of comparing multiple populations of bilingual learners.
+To conclude, these experiments provide two main contributions to existing research. First, the data suggest that language mixing can sometimes hinder bilingual children’s learning of new words that occur downstream, but leave open important questions as to why. Second, the two experiments show that different populations of bilingual children sometimes perform differently on equivalent language tasks. This highlights the need for caution in generalizing findings to bilinguals in general, and calls for an increased practice of comparing multiple populations of bilingual learners.
 
 ## References
 
@@ -1664,7 +1683,9 @@ To conclude, this research provides two main contributions to existing research.
 ```{r sampleorder-table, include = TRUE, tab.cap = NULL, results = "asis"}
 
 sample_order <- read_csv("../data/sample_order.csv") %>%
-  mutate(`Trial #` = as.integer(`Trial #`))
+  mutate(`Trial #` = as.integer(`Trial #`)) %>%
+  rename_with(str_to_lower) %>%
+  mutate(`study phase` = str_to_lower(`study phase`))
 
 apa_table(sample_order, caption = "Sample trial order for French-English bilinguals (Experiment 1).")
 
