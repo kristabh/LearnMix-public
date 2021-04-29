@@ -52,6 +52,28 @@ header-includes:
 ---
 
 
+```{r load.packages, echo = FALSE}
+
+# Load packages
+
+# Scripts runs with on R-3.6.3. 
+# How to install old versions  https://support.rstudio.com/hc/en-us/articles/219949047-Installing-older-versions-of-packages
+# I like RSwitch for Mac to manage my R versions https://rud.is/rswitch/
+
+library(groundhog) #Make  R scripts reproducible
+groundhog.day = "2019-06-01" 
+
+#packages <- c("knitr", "eyetrackingR", "tidyverse", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools")
+
+packages <- c("knitr", "eyetrackingR", "dplyr", "readr", "ggplot2", "forcats", "stringr", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools")
+
+groundhog.library(packages, groundhog.day)          
+
+library("papaja") #devtools::install_github("crsh/papaja", ref = "v0.1.0.9842") # Need to have appropriate papaja installed from github
+
+```
+
+
 ```{r setup, echo = FALSE}
 ## Test phase: Familiar word at 3000ms
 ## Training phase: Familiar word at 4500ms
@@ -60,28 +82,6 @@ header-includes:
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = FALSE, include = FALSE, dpi=300, fig.width=7)
 ```
 
-```{r load.packages, echo = FALSE}
-##Loading LearnMix Data
-
-# Load packages
-
-#source("https://install-github.me/noamross/redoc")
-
-#devtools::install_github("crsh/papaja") # Need to have latest version of papaja installed from github
-#devtools::install_github("mariusbarth/papaja@merMod-support") to print lmer models https://github.com/crsh/papaja/issues/154
-#devtools::install_github("jwdink/eyetrackingR") # if not on CRAN must install from Github
-library("papaja")
-library(eyetrackingR) # Currently does not run under R 4.0.2, run under R 3.6.3
-library(tidyverse) # loads dplyr, ggplot, broom, forcats, etc.
-library(ggridges)
-library(lme4)
-library(corrr) #Good tools for correlations
-library(ez)
-library(apa)
-library(english)
-library(lmerTest)
-
-```
 
 By definition, children growing up in bilingual environments encounter switches between their languages. Some switches occur when different people use different languages, while others occur when a bilingual speaker mixes two languages. Switches are more common in some families than others, and they can happen at both very short and very long intervals. Many switches even occur within individual sentences [see @ervin_2005; @sridhar_1980]. In a natural play study with Spanish-English bilingual families, all caregivers mixed two languages within sentences at least once, and some parents mixed languages in as many as one-third of their utterances [@bail_2015]. Indeed, parents sometimes produce mixed-language sentences even when they overtly try to avoid it [@bail_2015; @goodz_1989]. Given that language mixing is a normal part of bilingual environments, it is important to understand its relationship to children’s language learning. Here, we investigated whether and how language mixing affects 3-year-old children’s learning of new words.
 
@@ -105,6 +105,7 @@ We also considered several other potential results. First, it is possible that e
 
 
 ```{r participants-montreal}
+##Loading LearnMix Data
 
 part_montreal <- read_csv("../data/part_montreal_anon.csv") %>%
   filter(keeper == 1) 
@@ -264,6 +265,7 @@ test_agg_by_stim <- response_window_agg_by_sub_test %>% # Get all the means
   group_by(object.order, sentence.type) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2)))
 
 
@@ -282,6 +284,7 @@ test_agg <- response_window_agg_by_sub_test %>% # Get all the means
   group_by(sentence.type) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2)))
 
 # Pulling means and SDs to report in text
@@ -353,6 +356,7 @@ test_chance <- response_window_agg_by_sub_test %>%
   group_by(sentence.type) %>%
   do(broom::tidy(t.test(.$Prop , mu = .5, data = .))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 3)))
 
 ```
@@ -365,6 +369,7 @@ test_dom_means <- response_window_agg_by_sub_test %>% # Get all the means
   group_by(sentence.type, carrier.dominant) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2)))
 
 
@@ -548,6 +553,7 @@ training_agg <- response_window_agg_by_sub_training %>% # Get all the means
   group_by(target.type, sentence.type, familiarity) %>%
   summarise(mean = mean(Prop), sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = sd/sqrt(n)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 3))) %>%
   select(target.type, sentence.type, familiarity, mean, sd) %>%
   mutate(sentence.type = str_to_lower(sentence.type)) %>%
@@ -616,6 +622,7 @@ test_paired <- response_window_agg_by_sub_training %>%
   group_by(sentence.type) %>%
   do(broom::tidy(t.test(.$Prop , mu = .5, data = .))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1)) %>%
+   ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 3))))
 
 ```
@@ -630,6 +637,7 @@ response_window_agg_by_sub_training %>% # Get all the means
  #   group_by(target.type,  familiarity, carrier.dominant) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2)))
 
 
@@ -814,6 +822,7 @@ test_agg_by_stim2 <- response_window_agg_by_sub_test2 %>% # Get all the means
   group_by(sentence.type, target.image) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2)))
 
 # 
@@ -840,6 +849,7 @@ response_window_agg_by_sub_test2 %>%
   group_by(sentence.type) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+    ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2))))
 
 # Pulling means and SDs to report in text
@@ -904,6 +914,7 @@ test_chance2 <- response_window_agg_by_sub_test2 %>%
   group_by(sentence.type) %>%
   do(broom::tidy(t.test(.$Prop , mu = .5, data = .))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1)) %>%
+  ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 3)))
 
 ```
@@ -918,6 +929,7 @@ means_dom_2 <- response_window_agg_by_sub_test2 %>% # Get all the means
   group_by(sentence.type, carrier.dominant) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+    ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2)))
 
 
@@ -1099,6 +1111,7 @@ training_agg2 <- response_window_agg_by_sub_training2_with_distractor %>% # Get 
   group_by(target.type, sentence.type, familiarity) %>%
   summarise(mean = mean(Prop), sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = sd/sqrt(n)) %>%
+    ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 3))) %>%
   select(target.type, sentence.type, familiarity, mean, sd) %>%
   mutate(sentence.type = str_to_lower(sentence.type)) %>%
@@ -1127,6 +1140,7 @@ training_agg2 <- response_window_agg_by_sub_training2_with_distractor %>% # Get 
   group_by(sentence.type) %>%
   do(broom::tidy(t.test(.$Prop , mu = .5, data = .))) %>%
   mutate(cohen_d = statistic/sqrt(parameter +1)) %>%
+     ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 3))))
 
 ```
@@ -1167,6 +1181,7 @@ response_window_agg_by_sub_training2 %>% # Get all the means
   group_by(sentence.type, carrier.dominant) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
+    ungroup() %>%
   mutate_if(is.numeric, funs(signif(., 2)))
 
 
