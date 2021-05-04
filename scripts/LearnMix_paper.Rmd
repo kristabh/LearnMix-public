@@ -52,6 +52,15 @@ header-includes:
 ---
 
 
+```{r setup, echo = FALSE}
+## Test phase: Familiar word at 3000ms
+## Training phase: Familiar word at 4500ms
+
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = FALSE, include = FALSE, dpi=300, fig.width=7)
+```
+
+
 ```{r load.packages, echo = FALSE}
 
 # Load packages
@@ -60,27 +69,44 @@ header-includes:
 # How to install old versions  https://support.rstudio.com/hc/en-us/articles/219949047-Installing-older-versions-of-packages
 # I like RSwitch for Mac to manage my R versions https://rud.is/rswitch/
 
-library(groundhog) #Make  R scripts reproducible
-groundhog.day = "2019-06-01" 
+#Run in R console
+#library(knitr)
+#knit("LearnMix_paper.Rmd"))
 
-#packages <- c("knitr", "eyetrackingR", "tidyverse", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools")
+# library(groundhog) #Make  R scripts reproducible
+# groundhog.day = "2019-06-01" 
+# 
+# #packages <- c("eyetrackingR", "tidyverse", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools")
+# 
+packages <- c("dplyr", "readr", "ggplot2", "forcats", "stringr", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools", "rstatix")
+# 
+# groundhog.library(packages, groundhog.day)
+# 
+# groundhog.library("eyetrackingR", "2019-06-01")
+# 
 
-packages <- c("knitr", "eyetrackingR", "dplyr", "readr", "ggplot2", "forcats", "stringr", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools")
+library(tidyverse)
+library(lme4)
+library(corrr)
+library(ez)
+library(apa)
+library(english)
+library(lmerTest)
+library(devtools)
+library(rstatix)
+library(lazyeval) #need for interp function
+library(devtools)
+library(here)
+library("papaja") #devtools::install_github("crsh/papaja") # Need to have appropriate papaja installed from github
 
-groundhog.library(packages, groundhog.day)          
+# Load up scripts from eyetrackingR package, which are now copied to their own folder within this repository. Doing it this way because it is no longer on CRAN - causing lots of headaches! http://www.eyetracking-r.com/
 
-library("papaja") #devtools::install_github("crsh/papaja", ref = "v0.1.0.9842") # Need to have appropriate papaja installed from github
+files.sources = list.files(here("/scripts/eyetrackingR"))
+sapply(here(paste0("scripts/eyetrackingR/", files.sources)), source)
+
 
 ```
 
-
-```{r setup, echo = FALSE}
-## Test phase: Familiar word at 3000ms
-## Training phase: Familiar word at 4500ms
-
-
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = FALSE, include = FALSE, dpi=300, fig.width=7)
-```
 
 
 By definition, children growing up in bilingual environments encounter switches between their languages. Some switches occur when different people use different languages, while others occur when a bilingual speaker mixes two languages. Switches are more common in some families than others, and they can happen at both very short and very long intervals. Many switches even occur within individual sentences [see @ervin_2005; @sridhar_1980]. In a natural play study with Spanish-English bilingual families, all caregivers mixed two languages within sentences at least once, and some parents mixed languages in as many as one-third of their utterances [@bail_2015]. Indeed, parents sometimes produce mixed-language sentences even when they overtly try to avoid it [@bail_2015; @goodz_1989]. Given that language mixing is a normal part of bilingual environments, it is important to understand its relationship to children’s language learning. Here, we investigated whether and how language mixing affects 3-year-old children’s learning of new words.
@@ -101,14 +127,23 @@ Our experiments tested 3-year-old children using an eye-tracking task with a lea
 
 Our main prediction was that children would show better learning of the novel word encountered in single-language sentences than in mixed-language sentences. Based on previous findings [@byersh_2017; @potter_2019; @morini_2019], we hypothesized that this would be due to a temporary disruption in language processing upon hearing the borrowed word. Specifically, upon hearing a language switch, children would be less able to identify and encode the mapping between the novel label and novel object. This would be evident in children’s behavior during the learning phase. Specifically, we predicted that on mixed-language trials (relative to single-language trials), children would be less successful in identifying the correct familiar object and, in turn, would have spent less time gazing at the target novel object.
 
-We also considered several other potential results. First, it is possible that even when language mixing disrupts real-time processing, young children's uptake of new words is unaffected. Second, it is possible that we would not replicate previously reported effects of language mixing on language comprehension. In this case, we would either find that language mixing does not affect word learning, or possibly that it does affect word learning but not due to in-the-moment processing difficulties during the learning phase. Finally, considering the population differences noted above, French-English and Spanish-English bilingual children might show different patterns of looking, listening, and learning. We thus not only compared the two groups, but also explored whether individual differences in performance during the learning phase, exposure to language mixing at home, or vocabulary size predicted successful word learning in both the single-language and the mixed-language conditions.
+We also considered several other potential results. First, it is possible that even when language mixing disrupts real-time processing, young children's uptake of new words is unaffected. Second, it is possible that we would not replicate previously reported effects of language mixing on language comprehension. In this case, we would either find that language mixing does not affect word learning, or possibly that it does affect word learning but not due to in-the-moment processing difficulties during the learning phase. Finally, considering the population differences noted above, French-English and Spanish-English bilingual children might show different patterns of looking, listening, and learning. We thus not only compared the two groups, but also explored whether individual differences in performance during the learning phase, exposure to language mixing at home, vocabulary size, or socioeconomic status predicted successful word learning in both the single-language and the mixed-language conditions.
 
 
 ```{r participants-montreal}
 ##Loading LearnMix Data
 
+maternal.education <- c("no_high", "high_school", "college_diploma", "trade_school", "some_uni", "bachelors", "masters", "graduate","doctoral")
+edu.years <- c(8, 12, 13, 14, 14, 16, 18, 19, 21)
+edu.categories <- data.frame(maternal.education, edu.years)
+
 part_montreal <- read_csv("../data/part_montreal_anon.csv") %>%
-  filter(keeper == 1) 
+  filter(keeper == 1) %>%
+  left_join(edu.categories)
+
+
+
+
 
 
 
@@ -136,9 +171,9 @@ Children had an average age of `r round(mean(part_montreal$age.years), 1)` years
 
 Children's exposure to intra-sentential language mixing was measured via the Language Mixing Scale, a parent-report questionnaire that assesses the frequency of language mixing by the primary bilingual caregiver [@byersh_2014]. The scale ranges from 0 (no language mixing) to 30 (frequent language mixing). The average score in this sample  was `r round(mean(part_montreal$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_montreal$lang.mix, na.rm = TRUE),1)` - `r round(max(part_montreal$lang.mix, na.rm = TRUE),1)`).
 
-Socioeconomic status was assessed via mothers' highest educational attainment. All mothers had completed high school. Specifically, `r length(which(part_montreal$maternal.education == "masters" | part_montreal$maternal.education == "doctoral"))` mothers had completed a graduate degree, `r length(which(part_montreal$maternal.education == "bachelors"))` had completed a bachelor's degree, `r (length(which(part_montreal$maternal.education == "some_uni")) + length(which(part_montreal$maternal.education == "college_diploma")) + length(which(part_montreal$maternal.education == "trade_school")))` had completed other post-secondary training (e.g., college diploma, some university, trade school), and `r length(which(part_montreal$maternal.education == "high_school"))` had completed high school but had not received further formal education.
+Socioeconomic status was assessed via mothers' highest educational attainment. All mothers had completed high school. Specifically, `r length(which(part_montreal$maternal.education == "masters" | part_montreal$maternal.education == "doctoral"))` mothers had completed a graduate degree, `r length(which(part_montreal$maternal.education == "bachelors"))` had completed a bachelor's degree, `r (length(which(part_montreal$maternal.education == "some_uni")) + length(which(part_montreal$maternal.education == "college_diploma")) + length(which(part_montreal$maternal.education == "trade_school")))` had completed other post-secondary training (e.g., college diploma, some university, trade school), and `r length(which(part_montreal$maternal.education == "high_school"))` had completed high school but had not received further formal education. These categories were then converted to approximate years of education (e.g., high school = 12 years, bachelor's degree = 14 years), and the average educational attainment amongst mothers was `r round(mean(part_montreal$edu.years),1)` years (SD = `r round(sd(part_montreal$edu.years),1)`).
 
-Children’s productive vocabulary was measured in each of their languages. We assessed vocabulary via parent report measure, rather than using a direct measure such as  the Peabody Picture Vocabulary Test [PPVT; @dunn_2007].This choice was made in order to reduce the length of the experimental session for children, as they were also participating in a second eye-tracking study. Moreover, some of our research assistants did not have sufficient proficiency to administer the test in both languages. We chose a vocabulary measure appropriate for this age group, the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], which consisted of a checklists of words known by children ages 2-18 years based on words used in the Peabody Picture Vocabulary Test [PPVT; @dunn_2007]. The DVAP shows high level of concurrent and predictive validity [@libertus_2015]. To assess children’s vocabulary size in French, we adapted a checklist similar to the DVAP, based on words used in the French adaptation of the PPVT [Échelle de vocabulaire en images Peabody; @dunn_1993]. The words are ordered from easy (e.g., boy, chair) to hard (e.g., honing, angler), and parents were asked to indicate which words their child could say. A parent who was familiar with the child’s vocabulary in a particular language filled out the form in that language. In some cases, each parent filled out a form in the language they usually used to interact with their child, while in other cases the same parent filled out both forms. One parent, who was not familiar with the language her child used at daycare, had the form filled out by a daycare worker. Data were missing for one language for `r as.english(sum(is.na(part_montreal$vocab.total)))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_montreal$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_montreal$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_montreal$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_montreal$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_montreal$vocab.nondom, na.rm = TRUE),0)`), [`r apa_print(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom,paired=TRUE))$statistic`, *d* = `r cohens_d(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom,paired=TRUE))`]. The average number of words produced across both languages was `r round(mean(part_montreal$vocab.total, na.rm = TRUE),0)` (range: `r round(min(part_montreal$vocab.total, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.total, na.rm = TRUE),0)`). 
+Children’s productive vocabulary was measured in each of their languages. We assessed vocabulary via parent report measure, rather than using a direct measure such as  the Peabody Picture Vocabulary Test [PPVT; @dunn_2007].This choice was made in order to reduce the length of the experimental session for children, as they were also participating in a second eye-tracking study. Moreover, some of our research assistants did not have sufficient proficiency to administer the test in both languages. We chose a vocabulary measure appropriate for this age group, the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], which consisted of a checklists of words known by children ages 2-18 years based on words used in the Peabody Picture Vocabulary Test [PPVT; @dunn_2007]. The DVAP shows high level of concurrent and predictive validity [@libertus_2015]. To assess children’s vocabulary size in French, we adapted a checklist similar to the DVAP, based on words used in the French adaptation of the PPVT [Échelle de vocabulaire en images Peabody; @dunn_1993]. The words are ordered from easy (e.g., boy, chair) to hard (e.g., honing, angler), and parents were asked to indicate which words their child could say. A parent who was familiar with the child’s vocabulary in a particular language filled out the form in that language. In some cases, each parent filled out a form in the language they usually used to interact with their child, while in other cases the same parent filled out both forms. One parent, who was not familiar with the language her child used at daycare, had the form filled out by a daycare worker. Data were missing for one language for `r as.english(sum(is.na(part_montreal$vocab.total)))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_montreal$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_montreal$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_montreal$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_montreal$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_montreal$vocab.nondom, na.rm = TRUE),0)`), [`r apa_print(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom, paired=TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom, paired=TRUE))`]. The average number of words produced across both languages was `r round(mean(part_montreal$vocab.total, na.rm = TRUE),0)` (range: `r round(min(part_montreal$vocab.total, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.total, na.rm = TRUE),0)`). 
 
 
 ### Visual stimuli
@@ -186,6 +221,7 @@ mydata<- mydata[!is.na(mydata$id), ] ## Get rid of a couple of rows with NA ids
 mydata$Pupil <- (mydata$PupilLeft + mydata$PupilRight)/2 # Average pupil size, left and right
 
 mydata<- mydata %>%
+  left_join(edu.categories) %>%
   mutate(carrier.dominant = as.factor(carrier.dominant)) %>%
   mutate(trial.number = as.integer((trial.number))) %>%
   mutate(object.order =  recode(study.order, E1 = "WalemSingle", E2 = "WalemSwitch", F1 = "WalemSingle", F2 = "WalemSwitch")) %>%
@@ -202,7 +238,9 @@ mydata<- mydata %>%
 dataset2 <-  read.csv("../data/trials_nj_anon.csv", header = TRUE)
 
 mydata2 <- dataset2 %>%
-    mutate(population = "New Jersey")
+    mutate(population = "New Jersey") %>%
+  left_join(edu.categories) %>%
+  mutate(object.order = NA) # Set object.order and target.image to NA for now
 
 ```
 
@@ -218,6 +256,7 @@ data_test <- mydata %>%
                                trial_column = "trial.number",
                                time_column = "TrialTimestamp",
                                trackloss_column = "trackloss",
+                          
                                aoi_columns = c('targetnovel', 'distractornovel', 'teelo', 'walem'),
                                treat_non_aoi_looks_as_missing = TRUE)
 
@@ -246,6 +285,12 @@ trackloss_test <- trackloss_analysis(response_window_test)
 ## Gets rid of rows with trackloss within window of analysis
 response_window_clean_test <- clean_by_trackloss(data = response_window_test,
                                    trial_prop_thresh = (1 - 750/(2000-360))) # Need at least 750ms looking = 750/(2000-360)
+
+## Define predictor columns, for Montrel and then NJ
+
+#my_predictors <- c("sentence.type", "carrier.dominant", "object.order", "target.familiar", "target.novel", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years")
+#my_predictors2 <- c("sentence.type", "carrier.dominant", "object.order", "target.image", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years")
+
 ```
 
 
@@ -255,7 +300,8 @@ response_window_clean_test <- clean_by_trackloss(data = response_window_test,
 ## Aggregate by subject across response window
 response_window_agg_by_sub_test <- make_time_window_data(response_window_clean_test, 
                                                     aois = c("targetnovel"),
-                                                    predictor_columns=c("sentence.type", "object.order", "carrier.dominant", "population"),
+                                                    predictor_columns=c("sentence.type", "carrier.dominant", "object.order", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
+                                                   # predictor_columns = my_predictors,
                                                     summarize_by = "id",
                                                     other_dv_columns = c("PupilLeft", "PupilRight", "teelo", "walem"))
 
@@ -539,7 +585,9 @@ response_window_clean_training <- clean_by_trackloss(data = response_window_trai
 ## Aggregate by subject across response window
 response_window_agg_by_sub_training <- make_time_window_data(response_window_clean_training, 
                                                     aois = c('targetnovel', 'targetfamiliar','distractornovel', 'distractorfamiliar'), 
-                                                    predictor_columns=c("sentence.type", "object.order", "carrier.dominant", "population"),
+                                                 #   predictor_columns=c("sentence.type", "object.order", "carrier.dominant", "population"),
+                                                     predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
+                                                 # predictor_columns = my_predictors,
                                                     summarize_by = "id",
                                                     other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
   mutate(AOI = as.factor(AOI)) %>%
@@ -696,7 +744,7 @@ mutate(sentence.type = fct_rev(sentence.type)) %>%
   filter(target.type == "target") %>%
   ggplot(aes(x = Time, y = Prop, fill = AOI_label)) +
    # stat_summary(fun.y = "mean", geom = "point", size = 2.7) +
-    stat_summary(fun.y = "mean", geom = "area", position = "stack") +
+    stat_summary(fun = "mean", geom = "area", position = "stack") +
     scale_fill_manual(name = "",
                     breaks = c("Familiar target", "Novel target"),
                     guide = FALSE,
@@ -764,8 +812,17 @@ apa_table(training_anova_table, digits = 2, caption = "French-English bilinguals
 
 ```{r participants-princeton, echo = FALSE}
 
-part_princeton <- read.csv("../data/part_nj_anon.csv") %>%
-  filter(keeper == 1)
+part_princeton <- read.csv("../data/part_nj_anon.csv") %
+
+#Two princeton babies were miscoded as "keepers" but don't have data
+
+part_princeton[part_princeton$id == "NJ24", "keeper"] <- 0
+part_princeton[part_princeton$id == "NJ25", "keeper"] <- 0
+
+# Filter out these babies, add educational categories
+part_princeton <- part_princeton %>%
+  filter(keeper == 1) %>%
+   left_join(edu.categories)
 
 #part_princeton$months <- ifelse(part_princeton$days >15, part_princeton$months + 1, part_princeton$months) # round months
 
@@ -813,8 +870,10 @@ response_window_clean_test2 <- clean_by_trackloss(data = response_window_test2,
 ## Aggregate by subject across response window
 response_window_agg_by_sub_test2 <- make_time_window_data(response_window_clean_test2, 
                                                     aois = c("target"),
-                                                    predictor_columns = c("sentence.type", "target.image", "carrier.dominant", "population"),
-                                                    summarize_by = c("id"))
+                                                    #predictor_columns = c("sentence.type", "target.image", "carrier.dominant", "population"),
+                                                    predictor_columns=c("sentence.type", "carrier.dominant", "target.image", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
+                                                 #  predictor_columns = my_predictors2, 
+                                                   summarize_by = c("id"))
 
 
 
@@ -992,17 +1051,29 @@ In Experiment 1, we found that mid-sentence language mixing reduced French-Engli
 
 The method of Experiment 2 was approved by the Princeton University Institutional Review Board (“Language learning: Sounds, words, and grammar”; approval #7117). Data were collected between March 2017 and January 2018, and parents provided informed consent prior to their child’s participation. As in Experiment 1, participants in Experiment 2 participated in an additional experiment either prior to or after participating in this experiment. Stimuli, data, and analysis scripts are available via the Open Science Framework at  https://osf.io/q2nzr/?view_only=51145827989c44eaae3d1d6a659f6ebf [anonymized link for peer review].
 
+
+```{r}
+
+# Levene's test comparing educational levels
+
+levenes_edu <- part_princeton %>%
+  full_join(part_montreal) %>%
+  mutate(population = as.factor(population)) %>%
+  levene_test(edu.years ~ population)
+
+```
+
 ### Participants
 
-A total of 21 healthy Spanish-English bilingual children were included in the final sample. All children were growing up in New Jersey. English is the majority language and Spanish is the minority language in this region. Participants were primarily recruited via various nonprofit organizations in the region.
+A total of `r length(unique(part_princeton$id))` healthy Spanish-English bilingual children were included in the final sample. All children were growing up in New Jersey. English is the majority language and Spanish is the minority language in this region. Participants were primarily recruited via various nonprofit organizations in the region.
 
 Children had an average age of `r round(mean(part_princeton$age.years),1)` years (range: `r round(min(part_princeton$age.years),1)` – `r round(max(part_princeton$age.years),1)`). There were `r length(which(part_princeton$gender == "male"))` males and `r length(which(part_princeton$gender == "female"))` females. As in Experiment 1, a modified version of the Language Experience and Proficiency Questionnaire [@marian_2007] was used to assess the children’s language background and proficiency. Inclusion criteria and definitions of language dominance were the same as in Experiment 1. There were  `r length(which(part_princeton$child.dom.lang == "English"))` English-dominant children and `r length(which(part_princeton$child.dom.lan == "Spanish"))` Spanish-dominant children. For Spanish, all children were exposed regularly from birth. For English, `r length(which(part_princeton$aoa.L2 == 0))` were exposed regularly from birth (i.e., were simultaneous bilinguals), `r length(which(part_princeton$aoa.L2 > 0 & part_princeton$aoa.L2 < 13))` were exposed after birth but within the first year of life, and `r length(which(part_princeton$aoa.L2 > 13))` were exposed between 12 and `r max(part_princeton$aoa.L2)` months. Another `r nrow(excl_princeton)` children were tested but not included in the final sample due to not meeting pre-established inclusion criteria for bilingual exposure (*n* = `r length(which(excl_princeton$exclusion == "language"))`) or reported language delay (*n* = `r length(which(excl_princeton$exclusion == "speech delay"))`).
 
-As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2014].  The average score in this sample was `r round(mean(part_princeton$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_princeton$lang.mix, na.rm = TRUE),1)` - `r round(max(part_princeton$lang.mix, na.rm = TRUE),1)`). This was not statistically different from the amount of mixing reported by parents in Experiment 1 who had a mean of `r round(mean(part_montreal$lang.mix, na.rm = TRUE),1)` [`r apa_print(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r cohens_d(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
+As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2014].  The average score in this sample was `r round(mean(part_princeton$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_princeton$lang.mix, na.rm = TRUE),1)` - `r round(max(part_princeton$lang.mix, na.rm = TRUE),1)`). This was not statistically different from the amount of mixing reported by parents in Experiment 1 who had a mean of `r round(mean(part_montreal$lang.mix, na.rm = TRUE),1)` [`r apa_print(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
 
-Socioeconomic status was assessed via mothers' highest educational attainment: `r length(which(part_princeton$maternal.education == "graduate"))` had completed a graduate degree, `r length(which(part_princeton$maternal.education == "some_uni"))` had completed some university, `r length(which(part_princeton$maternal.education == "high_school"))` had completed high school, `r length(which(part_princeton$maternal.education == "no_high"))` had not completed high school, and `r sum(is.na(part_princeton$maternal.education))` did not report. That is, among those reporting, 56% of mothers of Spanish-English bilingual children had completed education beyond high school; in contrast, 95% of mothers of French-English bilingual children had done so. Thus, we infer that the sample of Spanish-English bilingual children was of lower socioeconomic status than the sample of French-English bilingual children.
+Socioeconomic status was assessed via mothers' highest educational attainment: `r length(which(part_princeton$maternal.education == "graduate"))` had completed a graduate degree, `r length(which(part_princeton$maternal.education == "some_uni"))` had completed some university, `r length(which(part_princeton$maternal.education == "high_school"))` had completed high school, `r length(which(part_princeton$maternal.education == "no_high"))` had not completed high school, and `r sum(is.na(part_princeton$maternal.education))` did not report. That is, among those reporting, 56% of mothers of Spanish-English bilingual children had completed education beyond high school; in contrast, 95% of mothers of French-English bilingual children had done so. As in Experiment 1, these categories were then converted to approximate years of education, and the average educational attainment among mothers of the Spanish-English sample was `r round(mean(part_princeton$edu.years, na.rm = TRUE),1)` years (SD = `r round(sd(part_princeton$edu.years, na.rm = TRUE),1)`. Comparing to the Montreal sample, the overall mean educational level of the two samples was not dissimilar (Montreal = `r round(mean(part_montreal$edu.years, na.rm = TRUE),1)`, New Jersey = `r round(mean(part_princeton$edu.years, na.rm = TRUE),1)`), and these were not different in a Welch *t*-test, which assumes unequal variances [`r apa_print(t.test(part_princeton$edu.years, part_montreal$edu.years, var.equal = FALSE, na.rm = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_princeton$edu.years, part_montreal$edu.years, var.equal = TRUE))`]. However, the level of education was much more uniform in the Montreal sample (SD = `r round(sd(part_montreal$edu.years, na.rm = TRUE),1)`) and more variable in the Princeton sample (`r round(sd(part_princeton$edu.years, na.rm = TRUE),1)`), a difference which was significant by Levene's test [F(`r levenes_edu$df1`, `r levenes_edu$df2` = `r levenes_edu$statistic`, *p* = `r round(levenes_edu$p, 2)`]. Thus, we infer that the sample of Spanish-English bilingual children had a different profile of socioeconomic status, including more mothers with lower educational attainment, than the sample of French-English bilingual children.
 
-As in Experiment 1, children’s productive vocabulary size in English was assessed using the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], and using a Spanish adaptation we created for the purposes of this study based on the Spanish version of the PPVT [Test de Vocabulario en Imagenes Peabody; @dunn_1986].  Data were missing for one language for `r sum(is.na(part_princeton$vocab.total))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_princeton$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_princeton$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_princeton$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_princeton$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_princeton$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_princeton$vocab.nondom, na.rm = TRUE),0)`), a difference which was not statistically reliable, [`r apa_print(t.test(part_princeton$vocab.dom, part_princeton$vocab.nondom,paired=TRUE))$statistic`, *d* = `r cohens_d(t.test(part_princeton$vocab.dom, part_princeton$vocab.nondom,paired=TRUE))`]. The total number of words produced across both languages was `r round(mean(part_princeton$vocab.total, na.rm = TRUE),0)` words on average (range: `r round(min(part_princeton$vocab.total, na.rm = TRUE),0)`– `r round(max(part_princeton$vocab.total, na.rm = TRUE),0)`). This was significantly fewer than French-English bilinguals, who produced an average of `r round(mean(part_montreal$vocab.total, na.rm = TRUE))` words, [`r apa_print(t.test(part_montreal$vocab.total, part_princeton$vocab.total, var.equal = TRUE))$statistic`, *d* = `r cohens_d(t.test(part_montreal$vocab.total, part_princeton$vocab.total, var.equal = TRUE))`]. This difference in vocabulary size may be related to differences in average socioeconomic status between the two samples [e.g., @hart_1995; @gilkerson2017].
+As in Experiment 1, children’s productive vocabulary size in English was assessed using the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], and using a Spanish adaptation we created for the purposes of this study based on the Spanish version of the PPVT [Test de Vocabulario en Imagenes Peabody; @dunn_1986].  Data were missing for one language for `r sum(is.na(part_princeton$vocab.total))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_princeton$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_princeton$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_princeton$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_princeton$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_princeton$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_princeton$vocab.nondom, na.rm = TRUE),0)`), a difference which was not statistically reliable, [`r apa_print(t.test(part_princeton$vocab.dom, part_princeton$vocab.nondom,paired=TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_princeton$vocab.dom, part_princeton$vocab.nondom,paired=TRUE))`]. The total number of words produced across both languages was `r round(mean(part_princeton$vocab.total, na.rm = TRUE),0)` words on average (range: `r round(min(part_princeton$vocab.total, na.rm = TRUE),0)`– `r round(max(part_princeton$vocab.total, na.rm = TRUE),0)`). This was significantly fewer than French-English bilinguals, who produced an average of `r round(mean(part_montreal$vocab.total, na.rm = TRUE))` words, [`r apa_print(t.test(part_montreal$vocab.total, part_princeton$vocab.total, var.equal = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_montreal$vocab.total, part_princeton$vocab.total, var.equal = TRUE))`]. This difference in vocabulary size may be related to differences in average socioeconomic status between the two samples [e.g., @hart_1995; @gilkerson2017].
 
 ### Stimuli
 
@@ -1093,7 +1164,9 @@ response_window_clean_training2 <- clean_by_trackloss(data = response_window_tra
 ## Aggregate by subject across response window
 response_window_agg_by_sub_training2 <- make_time_window_data(response_window_clean_training2, 
                                                     aois = c("target"), ## ADD TRAINING AS AOI??
-                                                    predictor_columns=c("sentence.type", "carrier.dominant", "population"),
+                                                    #predictor_columns=c("sentence.type", "carrier.dominant", "population"),
+                                                    predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
+                                                   # predictor_columns = my_predictors2,
                                                     summarize_by = "id")
 
 
@@ -1235,7 +1308,7 @@ apa_table(training_agg2, digits = 2, caption = "Spanish-English bilinguals (Expe
 
 
 
-A two-tailed, paired-samples *t*-test showed that children's attention to the target was similar for the single-language and mixed-language sentences, [`r apa_print(training_ttest2)$statistic`, *d* = `r cohens_d(training_ttest2)`].  Children's looking to the target side was significantly above chance during both single-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`,`r apa_print(training_ttest_single2)$statistic`, *d* = `r cohens_d(training_ttest_single2)`] and mixed-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`,`r apa_print(training_ttest_mixed2)$statistic`, *d* = `r cohens_d(training_ttest_mixed2)`]. Time course plots shown in Figure \@ref(fig:training-timecourse-figure2) confirm that children showed similar increases in looking to the labeled objects after naming for both sentence types. This indicated that language mixing did not affect children’s success in orienting to the labeled object during the learning phase.
+A two-tailed, paired-samples *t*-test showed that children's attention to the target was similar for the single-language and mixed-language sentences, [`r apa_print(training_ttest2)$statistic`, *d* = `r apa::cohens_d(training_ttest2)`].  Children's looking to the target side was significantly above chance during both single-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Single")$Prop)`,`r apa_print(training_ttest_single2)$statistic`, *d* = `r apa::cohens_d(training_ttest_single2)`] and mixed-language sentences [M = `r mean(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`, SD = `r sd(subset(response_window_agg_by_sub_training2, sentence.type == "Mixed")$Prop)`,`r apa_print(training_ttest_mixed2)$statistic`, *d* = `r apa::cohens_d(training_ttest_mixed2)`]. Time course plots shown in Figure \@ref(fig:training-timecourse-figure2) confirm that children showed similar increases in looking to the labeled objects after naming for both sentence types. This indicated that language mixing did not affect children’s success in orienting to the labeled object during the learning phase.
 
 ```{r training-timecourse-figure2, include = TRUE, fig.cap = "Timecourse of looking to target during learning trials for Spanish-English bilinguals (Experiment 2)."}
 ## TRAINING SPANISH-ENGLISH: Timecourse figure
@@ -1247,7 +1320,7 @@ mutate(sentence.type = fct_rev(sentence.type)) %>%
   summarize(Prop = mean(Prop)) %>%
   filter(AOI == "target") %>%
   ggplot(aes(x = Time, y = Prop)) +
-    stat_summary(fun.y = "mean", geom = "area", position = "stack", fill = "#65abd0") +
+    stat_summary(fun = "mean", geom = "area", position = "stack", fill = "#65abd0") +
     geom_vline(xintercept = 0, color = "grey50", linetype = "dashed") +
   geom_hline(yintercept = .5, color = "grey50", linetype = "dashed") +
     labs(y = "Proportion looking to targets", x = "Time from target word onset (ms)") +
@@ -1361,7 +1434,7 @@ training_trials <- response_window_agg_by_sub_training_targ %>%
 
 test_trials <- response_window_agg_by_sub_test %>%
   rename(prop.test = Prop) %>%
-  select(id, sentence.type, prop.test)%>%
+  select(id, sentence.type, prop.test, edu.years)%>%
   as.data.frame()
 
 test_training_wide <- training_trials %>%
@@ -1395,12 +1468,12 @@ anova(test_training_model, test_training_model_simpler) #Compare the models. Int
 
 training_trials2 <- response_window_agg_by_sub_training2 %>%
   rename(prop.learning = Prop) %>%
-  select(id, population, sentence.type, prop.learning) %>%
+  select(id, population, sentence.type, prop.learning, edu.years) %>%
   as.data.frame()
 
 test_trials2 <- response_window_agg_by_sub_test2 %>%
   rename(prop.test = Prop) %>%
-  select(id, sentence.type, prop.test)%>%
+  select(id, sentence.type, prop.test, edu.years)%>%
   as.data.frame()
 
 test_training_wide2 <- training_trials2 %>%
@@ -1473,6 +1546,8 @@ summary(test_training_model_group_simpler)
 
 anova(test_training_model_group_simpler, test_training_model_group)
 
+
+
 ```
 
 ### Relationship between learning phase and test performance
@@ -1520,100 +1595,135 @@ apa_table(coefs_table, digits = 3, caption = "Linear mixed effects model testing
 
 # Combined training dataframe - trial by trial
 
-all_clean_training <- bind_rows(response_window_clean_training, response_window_clean_training2)
+#all_clean_training <- bind_rows(response_window_clean_training, response_window_clean_training2)
+all_clean_training <- full_join(response_window_clean_training, response_window_clean_training2) %>%
+  left_join(edu.categories)
 
-response_window_agg_by_sub_training_all <- make_time_window_data(all_clean_training, 
-                                                             aois = c('target'), 
-                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix"),
-                                                         #    summarize_by = c("id"),
-                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-  mutate(AOI = as.factor(AOI)) %>%
-  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-  mutate(population = as.factor(population)) %>%
-  mutate(sentence.type = fct_rev(sentence.type))
+# Some hoops due to eyetracking R
+all_clean_training_colnames <- colnames(all_clean_training)
+mostattributes(all_clean_training) <- attributes(response_window_clean_training)
+colnames(all_clean_training) <- all_clean_training_colnames
+
+
+
+#esponse_window_agg_by_trial_training_all <- full_join(response_window_agg_by_trial_training, response_window_agg_by_trial_training2)
+
+
+
+
+
+
+
+# response_window_agg_by_trial_training_all <- make_time_window_data(all_clean_training, 
+#                                                              aois = c('target'), 
+#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix", "edu.years"),
+#                                                          #    summarize_by = c("id"),
+#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+#   mutate(AOI = as.factor(AOI)) %>%
+#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+#   mutate(population = as.factor(population)) %>%
+#   mutate(sentence.type = fct_rev(sentence.type))
 ```
 
 
 ```{r}
 
-# Combined test dataframe - trial by trial
-
-
-all_clean_test <- response_window_clean_test %>%
-  mutate(target = targetnovel) %>%
-  bind_rows( response_window_clean_test2)
-
-response_window_agg_by_sub_test_all <- make_time_window_data(all_clean_test, 
-                                                             aois = c('target'), 
-                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix"),
-                                                         #    summarize_by = c("id"),
-                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-  mutate(AOI = as.factor(AOI)) %>%
-  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-  mutate(population = as.factor(population))
+# # Combined test dataframe - trial by trial
+# 
+# 
+# all_clean_test <- response_window_clean_test %>%
+#   mutate(target = targetnovel) %>%
+#   full_join(response_window_clean_test2) %>%
+#   left_join(edu.categories)
+# 
+# # Some hoops due to eyetracking R
+# all_clean_test_colnames <- colnames(all_clean_test)
+# mostattributes(all_clean_test) <- attributes(response_window_clean_test)
+# colnames(all_clean_test) <- all_clean_test_colnames
+# 
+# 
+# 
+# response_window_agg_by_trial_test_all <- make_time_window_data(all_clean_test, 
+#                                                              aois = c('target'), 
+#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix", "edu.years"),
+#                                                          #    summarize_by = c("id"),
+#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+#   mutate(AOI = as.factor(AOI)) %>%
+#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+#   mutate(population = as.factor(population))
 
 ```
 
 ```{r}
 
-# Combined training dataframe - by participant
+# # Combined training dataframe - by participant
+# 
+# response_window_agg_by_sub_training <- make_time_window_data(all_clean_training, 
+#                                                              aois = c('target'), 
+#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
+#                                                              summarize_by = c("id"),
+#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+#   mutate(AOI = as.factor(AOI)) %>%
+#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+#   mutate(population = as.factor(population)) %>%
+#   mutate(sentence.type = fct_rev(sentence.type))
+# ```
 
-response_window_agg_by_sub_training_sub <- make_time_window_data(all_clean_training, 
-                                                             aois = c('target'), 
-                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix"),
-                                                             summarize_by = c("id"),
-                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-  mutate(AOI = as.factor(AOI)) %>%
-  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-  mutate(population = as.factor(population)) %>%
-  mutate(sentence.type = fct_rev(sentence.type))
-```
 
-
-```{r}
+#```{r}
 
 # Combined test dataframe - by participant
 
-response_window_agg_by_sub_test_sub <- make_time_window_data(all_clean_test, 
-                                                             aois = c('target'), 
-                                                             predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix"),
-                                                             summarize_by = c("id"),
-                                                             other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-  mutate(AOI = as.factor(AOI)) %>%
-  mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-  mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-  mutate(population = as.factor(population))
+# response_window_agg_by_sub_test <- make_time_window_data(all_clean_test, 
+#                                                              aois = c('target'), 
+#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
+#                                                              summarize_by = c("id"),
+#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
+#   mutate(AOI = as.factor(AOI)) %>%
+#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
+#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
+#   mutate(population = as.factor(population))
 
 ```
+
+
+
 
 ```{r correlations}
 
 # Correlations with test
-grouped_corr_test <- response_window_agg_by_sub_test_sub %>%
-  group_by(population) %>%
-  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix)
 
-all_corr_test <- response_window_agg_by_sub_test_sub %>%
+response_window_agg_by_sub_test_all <- full_join(response_window_agg_by_sub_test, response_window_agg_by_sub_test2)
+
+grouped_corr_test <- response_window_agg_by_sub_test_all %>%
+  group_by(population) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix, edu.years)
+
+all_corr_test <- response_window_agg_by_sub_test %>%
   select(-population) %>%
   mutate(population = "All") %>%
   group_by(population) %>%
-  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix, edu.years) %>%
   bind_rows(grouped_corr_test) %>%
   mutate(phase = "Test")
 
-# Correlations with learning
-grouped_corr_training <- response_window_agg_by_sub_training_sub %>%
-  group_by(population) %>%
-  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix)
 
-all_corr_training <- response_window_agg_by_sub_test_sub %>%
+# Correlations with learning
+
+response_window_agg_by_sub_training_all <- full_join(response_window_agg_by_sub_training, response_window_agg_by_sub_training2)
+
+grouped_corr_training <- response_window_agg_by_sub_training_all %>%
+  group_by(population) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix, edu.years)
+
+all_corr_training <- response_window_agg_by_sub_training %>%
   select(-population) %>%
   mutate(population = "All") %>%
   group_by(population) %>%
-  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix) %>%
+  rstatix::cor_test(Prop, vocab.dom, vocab.nondom, vocab.total, lang.mix, edu.years) %>%
   bind_rows(grouped_corr_training) %>%
   mutate(phase = "Training")
   
@@ -1630,24 +1740,39 @@ all_corr <- bind_rows(all_corr_training, all_corr_test) %>%
   rename(variable = Variable) %>%
   mutate(phase = str_to_lower(phase)) %>%
   mutate(phase = recode(phase, training = "learning")) %>%
-  mutate(variable = recode(variable, lang.mix ="language mixing", vocab.dom = "dominant language vocabulary", vocab.nondom = "non-dominant language vocabulary", vocab.total = "total vocabulary"))
+  mutate(variable = recode(variable, lang.mix ="language mixing", vocab.dom = "dominant language vocabulary", vocab.nondom = "non-dominant language vocabulary", vocab.total = "total vocabulary", edu.years = "maternal education"))
   
 min_corr <- min(all_corr$r)
 max_corr <- max(all_corr$r)
 min_p <- min(all_corr$p)
 n_corr <- nrow(all_corr)
 
+# Correlations to report
+
+learning_vocab <- all_corr %>%
+  filter(phase == "learning" & population == "All" & variable == "total vocabulary") %>%
+  pull(p) %>%
+  round(2)
+
+test_matedu <- all_corr %>%
+  filter(phase == "test" & population == "All" & variable == "maternal education") %>%
+  pull(p) %>%
+  round(2)
+
+
+# Wide version of correlation matrix for paper
+
 all_corr_wide <- all_corr %>%
-  pivot_wider(id_cols = c(phase, population, variable), names_from = population, values_from = c(r), names_sep = " ")
+  select(-p) %>%
+  spread(population, r)
 
-
-
+  
 
 ```
 
 ### Individual differences
 
-Next, we examined whether performance was related to vocabulary knowledge (dominant language vocabulary, non-dominant language vocabulary, and total vocabulary) or exposure to language mixing. To fully explore the data, we computed correlations separately for learning and test phases, both for each population separately as well as for the whole sample combined. Thus, a total of `r n_corr` different correlations were computed (see Table \@ref(tab:corr-table)). None of the correlations approached statistical significance, even without controlling for multiple comparisons (ps ⩾ `r min_p`).
+Next, we examined whether performance was related to vocabulary knowledge (dominant language vocabulary, non-dominant language vocabulary, and total vocabulary) or exposure to language mixing. To fully explore the data, we computed correlations separately for learning and test phases, both for each population separately as well as for the whole sample combined. Thus, a total of `r n_corr` different correlations were computed (see Table \@ref(tab:corr-table)). Two of the correlations approached but did not reach statistical significance, although not when corrected for multiple comparisons. These were positive correlations in the entire sample between performance on the learning phase and total vocabulary size (*p* = `r learning_vocab`),  as well as performance at test and maternal education (*'* = `r test_matedu`). None of the correlations approached statistical significance, even without controlling for multiple comparisons (ps ⩾ .10).
 
 
 ```{r corr-table, results = "asis", include = TRUE}
@@ -1667,15 +1792,15 @@ Samuelson and colleagues [-@horst_2008; -@samuelson_2017] make an important dist
 
 The cognitive demands of our word learning task might have contributed to children’s overall difficulty with word learning. First, our learning phase presented children with complex visual scenes involving two familiar and two novel objects, which we had modeled on previous research with monolingual English-learners of this age [@fernald_2008]. However, some studies have suggested that the presence of multiple objects can make word learning challenging. For example, Horst and Samuelson [-@horst_2008] presented 24-month-old monolingual children with three objects: two familiar objects (e.g., car, cow) and one novel object (e.g., ‘splicket’). They instructed children to “Look at the splicket! Which one is the splicket?” Children’s knowledge of the familiar objects helped them identify the novel object as the referent of the novel word (i.e., referent selection), yet when tested they did not appear to retain this link (i.e., retention). Only when provided with additional cues that heightened the novel object’s salience, such as ostensive naming, did children retain the label. The authors suggested that although the familiar objects helped children identify the novel object, they also competed as possible referents for the novel word. Such complexity was also present in our design. On each learning trial, children not only encountered the target referent (e.g., teelo), but also three other competitors: the familiar target (e.g., dog), the familiar distractor (e.g., bunny), and the novel distractor (e.g., walem). Moreover, when children heard “Look! Do you see the dog on the teelo?”, they had to infer that the teelo was the object underneath the dog – an additional processing step that might have made the task especially challenging for some children [see @bion_2013; @horst_2008; @goodman_1998; and @carey_1978 for studies that required children to make comparable inferences]. Our results converge with this theoretical framework, as for both French-English and Spanish-English bilinguals, children who spent more time looking at the labeled object during the learning phase performed better at test.
 
-In light of these design-related complexities, the data for Spanish-English versus French-English bilingual children merit special attention. Previous work has demonstrated that language mixing affects real-time word comprehension among children from both of these populations [@byersh_2017; @potter_2018; -@potter_2019]. Such comparisons are essential for evaluating the generalizability of findings across populations of bilingual learners. Spanish-English bilinguals did not learn words in single- or mixed-language sentences, yet it appears that French-English bilingual children were able to learn in the single-language condition. While both groups showed above-chance looking toward the target side during the learning phase, French-English bilinguals were more efficient in doing so. This likely gave French-English bilinguals more time to encode the word-referent link. However, we do not currently know why the two groups differed in their orientation behaviors during the learning phase. We cannot rule out the possibility that small differences in setups, stimuli, and coding approaches between the two labs contributed to our divergent findings, although we took as many steps as possible to minimize these differences. However, both labs have a history of detecting subtle processing effects in related paradigms with both bilinguals and monolinguals of this approximate age.  
+In light of these design-related complexities, the data for Spanish-English versus French-English bilingual children merit special attention. Previous work has demonstrated that language mixing affects real-time word comprehension among children from both of these populations [@byersh_2017; @potter_2018; -@potter_2019]. Such comparisons are essential for evaluating the generalizability of findings across populations of bilingual learners. Spanish-English bilinguals did not learn words in single- or mixed-language sentences, yet it appears that French-English bilingual children were able to learn in the single-language condition. While both groups showed above-chance looking toward the target side during the learning phase, French-English bilinguals were more efficient in doing so. This likely gave French-English bilinguals more time to encode the word-referent link. However, we do not currently know why the two groups differed in their orientation behaviors during the learning phase. We cannot rule out the possibility that small differences in setups, stimuli, and coding approaches between the two labs contributed to our divergent findings. We took as many steps as possible to minimize these differences, and both labs have a history of detecting subtle processing effects in related paradigms with both bilinguals and monolinguals of this approximate age. That said, there are several ways that future research could evaluate the robustness and generalizability of these findings. While we were able to test a total of 40 children across the two communities, larger samples are needed to verify the replicability of the patterns we observed. Moreover, while existing paradigms for studying novel word learning in young children are often constrained to a small number of items, it will be important to develop new approaches for examining children's learning of larger stimulus sets. 
 
-We believe that the differences we observed are likely to be attributable to differences between the populations themselves. Indeed, there are a wide range of differences between our two groups of learners, which collectively highlight the importance of examining multiple populations in bilingual research. In our dataset, the two samples were similar in terms of how much language mixing they encountered (according to parental report), although this still leaves open the possibility that they might encounter different types of language mixing, which could be either similar to or distinct from our stimuli. We did observe that the families of French-English bilingual participants were of higher average socioeconomic status than the Spanish-English bilinguals, and had higher vocabularies, and previous research points to socioeconomic status as an important influence on early language processing and vocabulary growth [e.g., @fernald_2013], and theories of language acquisition may need to more explicitly consider interactions between bilingualism and socioeconomic status.  However, it is safe to assume that other dimensions of language experience which we were not able to measure directly also play a role in shaping bilingual learning. For example, we do not know how typical our chosen novel words were of other words in their vocabularies (even though the words were always pronounced with language-specific phonology). Moreover, these bilinguals’ learning takes place in different cultural milieus, with potentially different family-level and/or society-level differences in language attitudes. Research is needed to better understand the microstructure of language use in different bilingual households and different bilingual communities (including the communities studied here), and how these in turn affect children’s language processing and vocabulary growth over time. Efforts to understand variation in dual-language use across languages and cultures are currently underway in several countries [e.g., @carbajal_2020; @orena_2020], which will be critical for furthering knowledge about early bilingual development.
+We believe that the differences we observed are likely to be attributable to differences between the populations themselves. Indeed, there are a wide range of differences between our two groups of learners, which collectively highlight the importance of examining multiple populations in bilingual research. In our dataset, the two samples were similar in terms of how much language mixing they encountered (according to parental report), although this still leaves open the possibility that they might encounter different types of language mixing, which could be either similar to or distinct from our stimuli. We did observe that the families of French-English bilingual participants had less variable socioeconomic status than the Spanish-English bilinguals (which included more mothers who had not completed high school), and had higher vocabularies, and previous research points to socioeconomic status as an important influence on early language processing and vocabulary growth [e.g., @fernald_2013], and theories of language acquisition may need to more explicitly consider interactions between bilingualism and socioeconomic status.  However, it is safe to assume that other dimensions of language experience which we were not able to measure directly also play a role in shaping bilingual learning. For example, we do not know how typical our chosen novel words were of other words in their vocabularies (even though the words were always pronounced with language-specific phonology). Moreover, these bilinguals’ learning takes place in different cultural milieus, with potentially different family-level and/or society-level differences in language attitudes. Research is needed to better understand the microstructure of language use in different bilingual households and different bilingual communities (including the communities studied here), and how these in turn affect children’s language processing and vocabulary growth over time. Efforts to understand variation in dual-language use across languages and cultures are currently underway in several countries [e.g., @carbajal_2020; @orena_2020], which will be critical for furthering knowledge about early bilingual development.
 
 Regarding the findings for French-English bilingual children, it is important to consider why the single-language sentences (relative to the mixed-language sentences) enabled encoding of the link between the novel word and its referent. In addition to children’s equal gaze to target referents during the learning phase, many factors were identical across these sentence contexts: the same number of objects was visible, the same competition between objects was at play, the same inferences were required in both cases, and the same word-object association demands were required. What differed was whether the label for the mid-sentence familiar animal did or did not match the language used in the rest of the sentence, and possibly whether that word appeared in the child’s dominant or non-dominant language. Why were French-English bilinguals unable to encode the word-referent link in the mixed-language condition?
 
 One possibility is that language mixing could present ambiguity or confusion about what language the to-be-learned word is in. Some theories of bilingual language acquisition posit that even young bilingual learners do encode the language of a word [@byersh_2014; @curtin_2011]. But in contexts with language mixing, the language of a word is incrementally less clear, as the preceding sentence suddenly includes sounds, syllables, words, and/or phrases from both languages. Although our target novel words had clear phonological characteristics of one language or the other (i.e., words were pronounced either in an English-like or French/Spanish-like accent), these cues might have been insufficient or too fleeting.
 
-A second possibility is that bilingual children learn over time that language mixing does not offer an optimal moment for learning, and thus they either implicitly or explicitly disengage and/or do not encode novel words that appear in mixed-language sentences. Toddlers have been shown to apply at least some selectivity when learning words; for example, they prefer word labels that come from reliable over unreliable speakers [@mangardich_2018]. It may be that children interpret language mixing as a signal of a speaker’s uncertainty or unreliability in that moment, which may block efficient encoding of novel information. This possibility would need to be tested empirically in a future study that broadly examines children’s uptake of new information in communicative contexts with frequent vs. infrequent language mixing.
+A second possibility is that bilingual children learn over time that language mixing does not offer an optimal moment for learning, and thus they either implicitly or explicitly disengage and/or do not encode novel words that appear in mixed-language sentences. Adult bilinguals sometimes mix their languages when they have a lexical gap (@grosjean_1982) or have difficulty retrieving a word (@heredia_2001). Toddlers have been shown to apply at least some selectivity when learning words; for example, they prefer word labels that come from certain over uncertain speakers [@birch_2008, although see also @buac_2019]. It may be that children interpret language mixing as a signal of a speaker’s lexical uncertainty in the moment, which may hinder real-time encoding of a novel label. This possibility would need to be tested empirically in a future study that broadly examines children’s uptake of new information in communicative contexts with frequent vs. infrequent language mixing.
 
 
 Another approach to evaluating these contrasting – but complementary – ideas would be to teach children words in language-mixing contexts with simpler visuals than those used in the current design. For example, in an eye-tracking task, the child could view just one familiar-novel object pair at a time (e.g., a dog on a teelo, with no distractor), or only one novel object at a time, in isolation (e.g., only the teelo). Any heightened success in learning words under these simpler task demands would indicate that the cognitive load of the current design was too high. However, if language mixing is implicitly or explicitly perceived as a sub-optimal learning opportunity, children would avoid learning and/or show failure to learn a novel word that is presented in a mixed-language sentence, regardless of task complexity. Indeed, there is some evidence to support this possibility. In a study of Mandarin-English bilingual 18-month-olds using the Switch task (which presents one novel object at a time accompanied by an isolated label), children readily encoded words with full phonetic detail in a single-language context, but not in a switched-language context [@singh_2018].
@@ -1699,8 +1824,10 @@ To conclude, these experiments provide two main contributions to existing resear
 
 sample_order <- read_csv("../data/sample_order.csv") %>%
   mutate(`Trial #` = as.integer(`Trial #`)) %>%
-  rename_with(str_to_lower) %>%
-  mutate(`study phase` = str_to_lower(`study phase`))
+ # rename_with(str_to_lower) %>%
+  mutate(`study phase` = str_to_lower(`Study phase`))
+
+names(sample_order) <- str_to_lower(names(sample_order))
 
 apa_table(sample_order, caption = "Sample trial order for French-English bilinguals (Experiment 1).")
 
