@@ -65,26 +65,6 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, cache = FALSE, include = FA
 
 # Load packages
 
-# Scripts runs with on R-3.6.3. 
-# How to install old versions  https://support.rstudio.com/hc/en-us/articles/219949047-Installing-older-versions-of-packages
-# I like RSwitch for Mac to manage my R versions https://rud.is/rswitch/
-
-#Run in R console
-#library(knitr)
-#knit("LearnMix_paper.Rmd"))
-
-# library(groundhog) #Make  R scripts reproducible
-# groundhog.day = "2019-06-01" 
-# 
-# #packages <- c("eyetrackingR", "tidyverse", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools")
-# 
-packages <- c("dplyr", "readr", "ggplot2", "forcats", "stringr", "lme4", "corrr", "ez", "apa", "english", "lmerTest", "devtools", "rstatix")
-# 
-# groundhog.library(packages, groundhog.day)
-# 
-# groundhog.library("eyetrackingR", "2019-06-01")
-# 
-
 library(tidyverse)
 library(lme4)
 library(corrr)
@@ -94,7 +74,7 @@ library(english)
 library(lmerTest)
 library(devtools)
 library(rstatix)
-library(lazyeval) #need for interp function
+library(lazyeval) #need for interp function, used in eyetrackingR scripts
 library(devtools)
 library(here)
 library("papaja") #devtools::install_github("crsh/papaja") # Need to have appropriate papaja installed from github
@@ -104,6 +84,12 @@ library("papaja") #devtools::install_github("crsh/papaja") # Need to have approp
 files.sources = list.files(here("/scripts/eyetrackingR"))
 sapply(here(paste0("scripts/eyetrackingR/", files.sources)), source)
 
+
+# Using renv package for version control
+
+# renv::init
+# renv::snapshot() #Snapshot taken on May 5, 2021
+# renv::restore() #Use this function to restore the original packages to your library, from the renv.lock file
 
 ```
 
@@ -133,22 +119,17 @@ We also considered several other potential results. First, it is possible that e
 ```{r participants-montreal}
 ##Loading LearnMix Data
 
+# Defining approximate years of education for each category
 maternal.education <- c("no_high", "high_school", "college_diploma", "trade_school", "some_uni", "bachelors", "masters", "graduate","doctoral")
 edu.years <- c(8, 12, 13, 14, 14, 16, 18, 19, 21)
 edu.categories <- data.frame(maternal.education, edu.years)
 
+#Reading in csv of Montreal participants data
 part_montreal <- read_csv("../data/part_montreal_anon.csv") %>%
   filter(keeper == 1) %>%
   left_join(edu.categories)
 
-
-
-
-
-
-
-#part_montreal$months <- ifelse(part_montreal$days >15, part_montreal$months + 1, part_montreal$months) # round months
-
+#Creating an exclusions dataframe
 excl_montreal <- read_csv("../data/part_montreal_anon.csv") %>%
   filter(keeper == 0)
 
@@ -171,7 +152,7 @@ Children had an average age of `r round(mean(part_montreal$age.years), 1)` years
 
 Children's exposure to intra-sentential language mixing was measured via the Language Mixing Scale, a parent-report questionnaire that assesses the frequency of language mixing by the primary bilingual caregiver [@byersh_2014]. The scale ranges from 0 (no language mixing) to 30 (frequent language mixing). The average score in this sample  was `r round(mean(part_montreal$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_montreal$lang.mix, na.rm = TRUE),1)` - `r round(max(part_montreal$lang.mix, na.rm = TRUE),1)`).
 
-Socioeconomic status was assessed via mothers' highest educational attainment. All mothers had completed high school. Specifically, `r length(which(part_montreal$maternal.education == "masters" | part_montreal$maternal.education == "doctoral"))` mothers had completed a graduate degree, `r length(which(part_montreal$maternal.education == "bachelors"))` had completed a bachelor's degree, `r (length(which(part_montreal$maternal.education == "some_uni")) + length(which(part_montreal$maternal.education == "college_diploma")) + length(which(part_montreal$maternal.education == "trade_school")))` had completed other post-secondary training (e.g., college diploma, some university, trade school), and `r length(which(part_montreal$maternal.education == "high_school"))` had completed high school but had not received further formal education. These categories were then converted to approximate years of education (e.g., high school = 12 years, bachelor's degree = 14 years), and the average educational attainment amongst mothers was `r round(mean(part_montreal$edu.years),1)` years (SD = `r round(sd(part_montreal$edu.years),1)`).
+Socioeconomic status was assessed via mothers' highest educational attainment. All mothers had completed high school. Specifically, `r length(which(part_montreal$maternal.education == "masters" | part_montreal$maternal.education == "doctoral"))` mothers had completed a graduate degree, `r length(which(part_montreal$maternal.education == "bachelors"))` had completed a bachelor's degree, `r (length(which(part_montreal$maternal.education == "some_uni")) + length(which(part_montreal$maternal.education == "college_diploma")) + length(which(part_montreal$maternal.education == "trade_school")))` had completed other post-secondary training (e.g., college diploma, some university, trade school), and `r length(which(part_montreal$maternal.education == "high_school"))` had completed high school but had not received further formal education. For subsequent analysis, these categories were then converted to approximate years of education (e.g., high school = 12 years, bachelor's degree = 16 years), and the average educational attainment amongst mothers was `r round(mean(part_montreal$edu.years),1)` years (SD = `r round(sd(part_montreal$edu.years),1)`).
 
 Children’s productive vocabulary was measured in each of their languages. We assessed vocabulary via parent report measure, rather than using a direct measure such as  the Peabody Picture Vocabulary Test [PPVT; @dunn_2007].This choice was made in order to reduce the length of the experimental session for children, as they were also participating in a second eye-tracking study. Moreover, some of our research assistants did not have sufficient proficiency to administer the test in both languages. We chose a vocabulary measure appropriate for this age group, the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], which consisted of a checklists of words known by children ages 2-18 years based on words used in the Peabody Picture Vocabulary Test [PPVT; @dunn_2007]. The DVAP shows high level of concurrent and predictive validity [@libertus_2015]. To assess children’s vocabulary size in French, we adapted a checklist similar to the DVAP, based on words used in the French adaptation of the PPVT [Échelle de vocabulaire en images Peabody; @dunn_1993]. The words are ordered from easy (e.g., boy, chair) to hard (e.g., honing, angler), and parents were asked to indicate which words their child could say. A parent who was familiar with the child’s vocabulary in a particular language filled out the form in that language. In some cases, each parent filled out a form in the language they usually used to interact with their child, while in other cases the same parent filled out both forms. One parent, who was not familiar with the language her child used at daycare, had the form filled out by a daycare worker. Data were missing for one language for `r as.english(sum(is.na(part_montreal$vocab.total)))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_montreal$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_montreal$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_montreal$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_montreal$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_montreal$vocab.nondom, na.rm = TRUE),0)`), [`r apa_print(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom, paired=TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_montreal$vocab.dom, part_montreal$vocab.nondom, paired=TRUE))`]. The average number of words produced across both languages was `r round(mean(part_montreal$vocab.total, na.rm = TRUE),0)` (range: `r round(min(part_montreal$vocab.total, na.rm = TRUE),0)`– `r round(max(part_montreal$vocab.total, na.rm = TRUE),0)`). 
 
@@ -209,7 +190,9 @@ During each of four test trials, only the two novel objects appeared on the scre
 The experimenter monitored the status of the experiment via the eye tracker’s built-in camera and controlled the experiment from a computer in an adjacent room using Tobii Studio software. The total duration of the experiment was approximately 4 minutes. Parents completed questionnaires either before or after the eye-tracking experiment.
 
 
-```{r load.concordia.data, echo = FALSE}
+```{r load.montreal.data, echo = FALSE}
+
+# Read in eyetracking data from Montreal participants 
 
 dataset <- read.csv("../data/trials_montreal_anon.csv", header = TRUE)
 
@@ -218,29 +201,33 @@ mydata <- dataset[!duplicated(dataset[c("id", "RecordingTimestamp", "trial.numbe
 mydata<- mydata[!is.na(mydata$MediaName), ] ## Get rid of a couple of rows with NA MediaNames
 mydata<- mydata[!is.na(mydata$id), ] ## Get rid of a couple of rows with NA ids
 
-mydata$Pupil <- (mydata$PupilLeft + mydata$PupilRight)/2 # Average pupil size, left and right
+mydata$Pupil <- (mydata$PupilLeft + mydata$PupilRight)/2 # Average pupil size, left and right. Not analyzed
+
+# Some cleaning up of this dataset
 
 mydata<- mydata %>%
-  left_join(edu.categories) %>%
+  left_join(edu.categories) %>% # Merge in dataframe to get edu.years
   mutate(carrier.dominant = as.factor(carrier.dominant)) %>%
-  mutate(trial.number = as.integer((trial.number))) %>%
+  mutate(trial.number = as.integer(trial.number)) %>%
   mutate(object.order =  recode(study.order, E1 = "WalemSingle", E2 = "WalemSwitch", F1 = "WalemSingle", F2 = "WalemSwitch")) %>%
   group_by(id, trial.number) %>%
   mutate(target = targetfamiliar | targetnovel) %>% #Recoding for just target/distractor
   mutate(distractor = distractorfamiliar | distractornovel) %>% #Recoding for just target/distractor
-    mutate(TrialTimestamp = RecordingTimestamp - min(RecordingTimestamp)) %>% #Get trial-by-trial timestamp
+    mutate(TrialTimestamp = RecordingTimestamp - min(RecordingTimestamp)) %>% #Get trial-by-trial timestamp for each participant
     mutate(population = "Montreal") #add population
 
 ```
 
-```{r load.princeton.data, echo = FALSE}
+```{r load.nj.data, echo = FALSE}
+
+# Read in looking time data from New Jersey participants
 
 dataset2 <-  read.csv("../data/trials_nj_anon.csv", header = TRUE)
 
 mydata2 <- dataset2 %>%
     mutate(population = "New Jersey") %>%
-  left_join(edu.categories) %>%
-  mutate(object.order = NA) # Set object.order and target.image to NA for now
+  left_join(edu.categories) %>% # Merge in dataframe to get edu.years
+  mutate(object.order = NA) # Set object.order to NA for now
 
 ```
 
@@ -250,7 +237,7 @@ mydata2 <- dataset2 %>%
 
 ## Creates initial dataframe
 data_test <- mydata %>%
-  filter(trial.type == "test") %>%
+  filter(trial.type == "test") %>% # Just for test trials
   make_eyetrackingr_data( .,
                                participant_column = "id",
                                trial_column = "trial.number",
@@ -301,13 +288,12 @@ response_window_clean_test <- clean_by_trackloss(data = response_window_test,
 response_window_agg_by_sub_test <- make_time_window_data(response_window_clean_test, 
                                                     aois = c("targetnovel"),
                                                     predictor_columns=c("sentence.type", "carrier.dominant", "object.order", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
-                                                   # predictor_columns = my_predictors,
                                                     summarize_by = "id",
                                                     other_dv_columns = c("PupilLeft", "PupilRight", "teelo", "walem"))
 
 
 
-test_agg_by_stim <- response_window_agg_by_sub_test %>% # Get all the means
+test_agg_by_stim <- response_window_agg_by_sub_test %>% # Get all the means by subject
   group_by(object.order, sentence.type) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
@@ -317,6 +303,7 @@ test_agg_by_stim <- response_window_agg_by_sub_test %>% # Get all the means
 
 #ezDesign(response_window_agg_by_sub_test, x = sentence.type, y = id, row = object.order)
 
+# T-test with sentence type and object order as predictors
   ezANOVA(data = response_window_agg_by_sub_test,
         wid = id,
         dv= Prop,
@@ -325,6 +312,7 @@ test_agg_by_stim <- response_window_agg_by_sub_test %>% # Get all the means
         type = 3
         )
 
+# SGroup means by sentence type
 test_agg <- response_window_agg_by_sub_test %>% # Get all the means
   mutate(sentence.type = fct_rev(sentence.type)) %>%
   group_by(sentence.type) %>%
@@ -357,11 +345,11 @@ mixed_se <- test_agg %>%
 ```{r, include = FALSE, echo = FALSE}
 ## TEST FRENCH-ENGLISH: Determine average and range number of trials
 
-(num_test_trials <- response_window_clean_test %>%
+num_test_trials <- response_window_clean_test %>%
   group_by(id, sentence.type) %>%
   summarize(n_trials = length(unique(trial.number))) %>%
   group_by(sentence.type) %>%
-  summarize(mean = round(mean(n_trials),2), min = min(n_trials), max = max(n_trials)))
+  summarize(mean = round(mean(n_trials),2), min = min(n_trials), max = max(n_trials))
 
 ```
 
@@ -379,7 +367,7 @@ test_paired <- response_window_agg_by_sub_test %>%
 ```
 
 ```{r include = FALSE}
-## Robustness test to make sure that three children who didn't look at the target during test are not driving the results
+## Robustness test to make sure that three children who didn't look at the target during test are not driving the results - they are not (still significant without them, and similar although somewhat smaller Cohen's d estimate).
 
 #ids of children who did not look to the target at all
 zero_test <- response_window_agg_by_sub_test %>%
@@ -534,7 +522,7 @@ test_figure
 
 
 ```{r test-dom-anova-table, include = TRUE, results = "asis"}
-#dominance analysis removed
+#dominance analysis removed from paper
 
 #apa_table(dom_anova[1]$ANOVA, digits = 2, caption = "French-English bilinguals (Experiment 1): ANOVA for test trials by dominance")
 
@@ -555,7 +543,6 @@ data_training <- mydata %>%
                                time_column = "TrialTimestamp",
                                trackloss_column = "trackloss",
                               aoi_columns = c('targetnovel', 'targetfamiliar','distractornovel', 'distractorfamiliar'),
-                            #   aoi_columns = c('target', 'distractor'),
                                treat_non_aoi_looks_as_missing = FALSE)
 
 
@@ -585,9 +572,7 @@ response_window_clean_training <- clean_by_trackloss(data = response_window_trai
 ## Aggregate by subject across response window
 response_window_agg_by_sub_training <- make_time_window_data(response_window_clean_training, 
                                                     aois = c('targetnovel', 'targetfamiliar','distractornovel', 'distractorfamiliar'), 
-                                                 #   predictor_columns=c("sentence.type", "object.order", "carrier.dominant", "population"),
-                                                     predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
-                                                 # predictor_columns = my_predictors,
+                                                    predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
                                                     summarize_by = "id",
                                                     other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
   mutate(AOI = as.factor(AOI)) %>%
@@ -682,7 +667,6 @@ test_paired <- response_window_agg_by_sub_training %>%
 
 response_window_agg_by_sub_training %>% # Get all the means
   group_by(target.type, familiarity, sentence.type, carrier.dominant) %>%
- #   group_by(target.type,  familiarity, carrier.dominant) %>%
   summarise(target.mean = mean(Prop), target.sd = sd(Prop), n = length(unique(id))) %>%
   mutate(SE = target.sd/sqrt(n)) %>%
   ungroup() %>%
@@ -743,7 +727,6 @@ mutate(sentence.type = fct_rev(sentence.type)) %>%
   mutate(AOI_label = recode_factor(AOI, targetfamiliar = "Familiar target", targetnovel = "Novel target", distractorfamiliar = "Familiar distractor", distractornovel = "Novel distractor")) %>%
   filter(target.type == "target") %>%
   ggplot(aes(x = Time, y = Prop, fill = AOI_label)) +
-   # stat_summary(fun.y = "mean", geom = "point", size = 2.7) +
     stat_summary(fun = "mean", geom = "area", position = "stack") +
     scale_fill_manual(name = "",
                     breaks = c("Familiar target", "Novel target"),
@@ -810,23 +793,22 @@ apa_table(training_anova_table, digits = 2, caption = "French-English bilinguals
 ```
 
 
-```{r participants-princeton, echo = FALSE}
+```{r participants-nj, echo = FALSE}
 
-part_princeton <- read.csv("../data/part_nj_anon.csv") %
+part_nj <- read.csv("../data/part_nj_anon.csv")
 
-#Two princeton babies were miscoded as "keepers" but don't have data
+#Two nj babies were miscoded as "keepers" but don't have data. Removed here
 
-part_princeton[part_princeton$id == "NJ24", "keeper"] <- 0
-part_princeton[part_princeton$id == "NJ25", "keeper"] <- 0
+part_nj[part_nj$id == "NJ24", "keeper"] <- 0
+part_nj[part_nj$id == "NJ25", "keeper"] <- 0
 
-# Filter out these babies, add educational categories
-part_princeton <- part_princeton %>%
+# Filter out these non-keeper babies, add educational categories
+part_nj <- part_nj %>%
   filter(keeper == 1) %>%
    left_join(edu.categories)
 
-#part_princeton$months <- ifelse(part_princeton$days >15, part_princeton$months + 1, part_princeton$months) # round months
-
-excl_princeton <- read.csv("../data/part_nj_anon.csv") %>%
+# Create exclusions dataframe
+excl_nj <- read.csv("../data/part_nj_anon.csv") %>%
   filter(keeper == 0)
 
 ```
@@ -834,6 +816,9 @@ excl_princeton <- read.csv("../data/part_nj_anon.csv") %>%
 
 ```{r include = FALSE, echo = FALSE}
 ## TEST SPANISH-ENGLISH: Make eyetracking R data
+
+# All dataframes ending with "2" pertain to New Jersey sample
+
 
 ## Creates initial dataframe
 data_test2 <- mydata2 %>%
@@ -978,7 +963,7 @@ test_chance2 <- response_window_agg_by_sub_test2 %>%
 
 ```
 
-```{r test-PRINCETON-dom-anova-table, include = TRUE, echo = FALSE, results = "asis"}
+```{r test-nj-dom-anova-table, include = TRUE, echo = FALSE, results = "asis"}
 
 ## TEST SPANISH-ENGLISH: Dominance analysis
 
@@ -1056,7 +1041,7 @@ The method of Experiment 2 was approved by the Princeton University Institutiona
 
 # Levene's test comparing educational levels
 
-levenes_edu <- part_princeton %>%
+levenes_edu <- part_nj %>%
   full_join(part_montreal) %>%
   mutate(population = as.factor(population)) %>%
   levene_test(edu.years ~ population)
@@ -1065,19 +1050,19 @@ levenes_edu <- part_princeton %>%
 
 ### Participants
 
-A total of `r length(unique(part_princeton$id))` healthy Spanish-English bilingual children were included in the final sample. All children were growing up in New Jersey. English is the majority language and Spanish is the minority language in this region. Participants were primarily recruited via various nonprofit organizations in the region.
+A total of `r length(unique(part_nj$id))` healthy Spanish-English bilingual children were included in the final sample. All children were growing up in New Jersey. English is the majority language and Spanish is the minority language in this region. Participants were primarily recruited via various nonprofit organizations in the region.
 
-Children had an average age of `r round(mean(part_princeton$age.years),1)` years (range: `r round(min(part_princeton$age.years),1)` – `r round(max(part_princeton$age.years),1)`). There were `r length(which(part_princeton$gender == "male"))` males and `r length(which(part_princeton$gender == "female"))` females. As in Experiment 1, a modified version of the Language Experience and Proficiency Questionnaire [@marian_2007] was used to assess the children’s language background and proficiency. Inclusion criteria and definitions of language dominance were the same as in Experiment 1. There were  `r length(which(part_princeton$child.dom.lang == "English"))` English-dominant children and `r length(which(part_princeton$child.dom.lan == "Spanish"))` Spanish-dominant children. For Spanish, all children were exposed regularly from birth. For English, `r length(which(part_princeton$aoa.L2 == 0))` were exposed regularly from birth (i.e., were simultaneous bilinguals), `r length(which(part_princeton$aoa.L2 > 0 & part_princeton$aoa.L2 < 13))` were exposed after birth but within the first year of life, and `r length(which(part_princeton$aoa.L2 > 13))` were exposed between 12 and `r max(part_princeton$aoa.L2)` months. Another `r nrow(excl_princeton)` children were tested but not included in the final sample due to not meeting pre-established inclusion criteria for bilingual exposure (*n* = `r length(which(excl_princeton$exclusion == "language"))`) or reported language delay (*n* = `r length(which(excl_princeton$exclusion == "speech delay"))`).
+Children had an average age of `r round(mean(part_nj$age.years),1)` years (range: `r round(min(part_nj$age.years),1)` – `r round(max(part_nj$age.years),1)`). There were `r length(which(part_nj$gender == "male"))` males and `r length(which(part_nj$gender == "female"))` females. As in Experiment 1, a modified version of the Language Experience and Proficiency Questionnaire [@marian_2007] was used to assess the children’s language background and proficiency. Inclusion criteria and definitions of language dominance were the same as in Experiment 1. There were  `r length(which(part_nj$child.dom.lang == "English"))` English-dominant children and `r length(which(part_nj$child.dom.lan == "Spanish"))` Spanish-dominant children. For Spanish, all children were exposed regularly from birth. For English, `r length(which(part_nj$aoa.L2 == 0))` were exposed regularly from birth (i.e., were simultaneous bilinguals), `r length(which(part_nj$aoa.L2 > 0 & part_nj$aoa.L2 < 13))` were exposed after birth but within the first year of life, and `r length(which(part_nj$aoa.L2 > 13))` were exposed between 12 and `r max(part_nj$aoa.L2)` months. Another `r nrow(excl_nj)` children were tested but not included in the final sample due to not meeting pre-established inclusion criteria for bilingual exposure (*n* = `r length(which(excl_nj$exclusion == "language"))`) or reported language delay (*n* = `r length(which(excl_nj$exclusion == "speech delay"))`).
 
-As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2014].  The average score in this sample was `r round(mean(part_princeton$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_princeton$lang.mix, na.rm = TRUE),1)` - `r round(max(part_princeton$lang.mix, na.rm = TRUE),1)`). This was not statistically different from the amount of mixing reported by parents in Experiment 1 who had a mean of `r round(mean(part_montreal$lang.mix, na.rm = TRUE),1)` [`r apa_print(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_princeton$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
+As in Experiment 1, children’s exposure to parental language mixing was measured via the Language Mixing Scale Score [@byersh_2014].  The average score in this sample was `r round(mean(part_nj$lang.mix, na.rm = TRUE),1)` (range: `r round(min(part_nj$lang.mix, na.rm = TRUE),1)` - `r round(max(part_nj$lang.mix, na.rm = TRUE),1)`). This was not statistically different from the amount of mixing reported by parents in Experiment 1 who had a mean of `r round(mean(part_montreal$lang.mix, na.rm = TRUE),1)` [`r apa_print(t.test(part_nj$lang.mix, part_montreal$lang.mix, var.equal = TRUE, na.rm = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_nj$lang.mix, part_montreal$lang.mix, var.equal = TRUE))`].
 
-Socioeconomic status was assessed via mothers' highest educational attainment: `r length(which(part_princeton$maternal.education == "graduate"))` had completed a graduate degree, `r length(which(part_princeton$maternal.education == "some_uni"))` had completed some university, `r length(which(part_princeton$maternal.education == "high_school"))` had completed high school, `r length(which(part_princeton$maternal.education == "no_high"))` had not completed high school, and `r sum(is.na(part_princeton$maternal.education))` did not report. That is, among those reporting, 56% of mothers of Spanish-English bilingual children had completed education beyond high school; in contrast, 95% of mothers of French-English bilingual children had done so. As in Experiment 1, these categories were then converted to approximate years of education, and the average educational attainment among mothers of the Spanish-English sample was `r round(mean(part_princeton$edu.years, na.rm = TRUE),1)` years (SD = `r round(sd(part_princeton$edu.years, na.rm = TRUE),1)`. Comparing to the Montreal sample, the overall mean educational level of the two samples was not dissimilar (Montreal = `r round(mean(part_montreal$edu.years, na.rm = TRUE),1)`, New Jersey = `r round(mean(part_princeton$edu.years, na.rm = TRUE),1)`), and these were not different in a Welch *t*-test, which assumes unequal variances [`r apa_print(t.test(part_princeton$edu.years, part_montreal$edu.years, var.equal = FALSE, na.rm = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_princeton$edu.years, part_montreal$edu.years, var.equal = TRUE))`]. However, the level of education was much more uniform in the Montreal sample (SD = `r round(sd(part_montreal$edu.years, na.rm = TRUE),1)`) and more variable in the Princeton sample (`r round(sd(part_princeton$edu.years, na.rm = TRUE),1)`), a difference which was significant by Levene's test [F(`r levenes_edu$df1`, `r levenes_edu$df2` = `r levenes_edu$statistic`, *p* = `r round(levenes_edu$p, 2)`]. Thus, we infer that the sample of Spanish-English bilingual children had a different profile of socioeconomic status, including more mothers with lower educational attainment, than the sample of French-English bilingual children.
+Socioeconomic status was assessed via mothers' highest educational attainment: `r length(which(part_nj$maternal.education == "graduate"))` had completed a graduate degree, `r length(which(part_nj$maternal.education == "some_uni"))` had completed some university, `r length(which(part_nj$maternal.education == "high_school"))` had completed high school, `r length(which(part_nj$maternal.education == "no_high"))` had not completed high school, and `r sum(is.na(part_nj$maternal.education))` did not report. That is, among those reporting, 56% of mothers of Spanish-English bilingual children had completed education beyond high school; in contrast, 95% of mothers of French-English bilingual children had done so. As in Experiment 1, these categories were then converted to approximate years of education, and the average educational attainment among mothers of the Spanish-English sample was `r round(mean(part_nj$edu.years, na.rm = TRUE),1)` years (SD = `r round(sd(part_nj$edu.years, na.rm = TRUE),1)`. Comparing to the Montreal sample, the overall mean educational level of the two samples was not dissimilar (Montreal = `r round(mean(part_montreal$edu.years, na.rm = TRUE),1)`, New Jersey = `r round(mean(part_nj$edu.years, na.rm = TRUE),1)`), and these were not different in a Welch *t*-test, which assumes unequal variances [`r apa_print(t.test(part_nj$edu.years, part_montreal$edu.years, var.equal = FALSE, na.rm = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_nj$edu.years, part_montreal$edu.years, var.equal = TRUE))`]. However, the level of education was much more uniform in the Montreal sample (SD = `r round(sd(part_montreal$edu.years, na.rm = TRUE),1)`) and more variable in the New Jersey sample (`r round(sd(part_nj$edu.years, na.rm = TRUE),1)`), a difference which was significant by Levene's test [F(`r levenes_edu$df1`, `r levenes_edu$df2` = `r levenes_edu$statistic`, *p* = `r round(levenes_edu$p, 2)`]. Thus, we infer that the sample of Spanish-English bilingual children had a different profile of socioeconomic status, including more mothers with lower educational attainment, than the sample of French-English bilingual children.
 
-As in Experiment 1, children’s productive vocabulary size in English was assessed using the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], and using a Spanish adaptation we created for the purposes of this study based on the Spanish version of the PPVT [Test de Vocabulario en Imagenes Peabody; @dunn_1986].  Data were missing for one language for `r sum(is.na(part_princeton$vocab.total))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_princeton$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_princeton$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_princeton$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_princeton$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_princeton$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_princeton$vocab.nondom, na.rm = TRUE),0)`), a difference which was not statistically reliable, [`r apa_print(t.test(part_princeton$vocab.dom, part_princeton$vocab.nondom,paired=TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_princeton$vocab.dom, part_princeton$vocab.nondom,paired=TRUE))`]. The total number of words produced across both languages was `r round(mean(part_princeton$vocab.total, na.rm = TRUE),0)` words on average (range: `r round(min(part_princeton$vocab.total, na.rm = TRUE),0)`– `r round(max(part_princeton$vocab.total, na.rm = TRUE),0)`). This was significantly fewer than French-English bilinguals, who produced an average of `r round(mean(part_montreal$vocab.total, na.rm = TRUE))` words, [`r apa_print(t.test(part_montreal$vocab.total, part_princeton$vocab.total, var.equal = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_montreal$vocab.total, part_princeton$vocab.total, var.equal = TRUE))`]. This difference in vocabulary size may be related to differences in average socioeconomic status between the two samples [e.g., @hart_1995; @gilkerson2017].
+As in Experiment 1, children’s productive vocabulary size in English was assessed using the Developmental Vocabulary Assessment for Parents [DVAP; @libertus_2015], and using a Spanish adaptation we created for the purposes of this study based on the Spanish version of the PPVT [Test de Vocabulario en Imagenes Peabody; @dunn_1986].  Data were missing for one language for `r sum(is.na(part_nj$vocab.total))` participant. Of the words on the DVAP, toddlers produced an average of `r round(mean(part_nj$vocab.dom, na.rm = TRUE),0)` words in their dominant language (range: `r round(min(part_nj$vocab.dom, na.rm = TRUE),0)`– `r round(max(part_nj$vocab.dom, na.rm = TRUE),0)`) and `r round(mean(part_nj$vocab.nondom, na.rm = TRUE),0)` words in their non-dominant language (range: `r round(min(part_nj$vocab.nondom, na.rm = TRUE),0)` – `r round(max(part_nj$vocab.nondom, na.rm = TRUE),0)`), a difference which was not statistically reliable, [`r apa_print(t.test(part_nj$vocab.dom, part_nj$vocab.nondom,paired=TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_nj$vocab.dom, part_nj$vocab.nondom,paired=TRUE))`]. The total number of words produced across both languages was `r round(mean(part_nj$vocab.total, na.rm = TRUE),0)` words on average (range: `r round(min(part_nj$vocab.total, na.rm = TRUE),0)`– `r round(max(part_nj$vocab.total, na.rm = TRUE),0)`). This was significantly fewer than French-English bilinguals, who produced an average of `r round(mean(part_montreal$vocab.total, na.rm = TRUE))` words, [`r apa_print(t.test(part_montreal$vocab.total, part_nj$vocab.total, var.equal = TRUE))$statistic`, *d* = `r apa::cohens_d(t.test(part_montreal$vocab.total, part_nj$vocab.total, var.equal = TRUE))`]. This difference in vocabulary size may be related to differences in average socioeconomic status between the two samples [e.g., @hart_1995; @gilkerson2017].
 
 ### Stimuli
 
-Auditory stimuli for Experiment 2 were equivalently structured to those used in Experiment 1, and were created with the same constraints (i.e., different phonological onsets, different rhymes, and sounded masculine in Spanish grammatical gender). Sentences were produced by a female Spanish-English bilingual speaker (e.g., “Look! Do you see the dog/*perro* on the teelo?” / *“¡Mira! ¿Puedes ver el perro/*dog *encima del teelo?”*). All other aspects of the stimuli were identical to Experiment 1. As in Experiment 1, the language of the carrier phrase was consistent for each child (e.g., always in Spanish or always in English). Children were randomly assigned to the language of testing: `r length(which(part_princeton$carrier.dominant == "dominant"))` children were tested in their dominant language, and `r length(which(part_princeton$carrier.dominant == "non-dominant"))` were tested in their non-dominant language.
+Auditory stimuli for Experiment 2 were equivalently structured to those used in Experiment 1, and were created with the same constraints (i.e., different phonological onsets, different rhymes, and sounded masculine in Spanish grammatical gender). Sentences were produced by a female Spanish-English bilingual speaker (e.g., “Look! Do you see the dog/*perro* on the teelo?” / *“¡Mira! ¿Puedes ver el perro/*dog *encima del teelo?”*). All other aspects of the stimuli were identical to Experiment 1. As in Experiment 1, the language of the carrier phrase was consistent for each child (e.g., always in Spanish or always in English). Children were randomly assigned to the language of testing: `r length(which(part_nj$carrier.dominant == "dominant"))` children were tested in their dominant language, and `r length(which(part_nj$carrier.dominant == "non-dominant"))` were tested in their non-dominant language.
 
 ### Procedure and reliability coding
 
@@ -1247,7 +1232,7 @@ training_ttest_mixed2 <- t.test(subset(response_window_agg_by_sub_training2, sen
 
 ```{r training-dom-anova-table2, echo = FALSE}
 
-## TRAINING PRINCETON: Dominance analysis
+## TRAINING NEW JERSEY: Dominance analysis
 
 
 response_window_agg_by_sub_training2 %>% # Get all the means
@@ -1588,107 +1573,6 @@ apa_table(coefs_table, digits = 3, caption = "Linear mixed effects model testing
 
 
 ```
-
-
-
-```{r}
-
-# Combined training dataframe - trial by trial
-
-#all_clean_training <- bind_rows(response_window_clean_training, response_window_clean_training2)
-all_clean_training <- full_join(response_window_clean_training, response_window_clean_training2) %>%
-  left_join(edu.categories)
-
-# Some hoops due to eyetracking R
-all_clean_training_colnames <- colnames(all_clean_training)
-mostattributes(all_clean_training) <- attributes(response_window_clean_training)
-colnames(all_clean_training) <- all_clean_training_colnames
-
-
-
-#esponse_window_agg_by_trial_training_all <- full_join(response_window_agg_by_trial_training, response_window_agg_by_trial_training2)
-
-
-
-
-
-
-
-# response_window_agg_by_trial_training_all <- make_time_window_data(all_clean_training, 
-#                                                              aois = c('target'), 
-#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix", "edu.years"),
-#                                                          #    summarize_by = c("id"),
-#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-#   mutate(AOI = as.factor(AOI)) %>%
-#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-#   mutate(population = as.factor(population)) %>%
-#   mutate(sentence.type = fct_rev(sentence.type))
-```
-
-
-```{r}
-
-# # Combined test dataframe - trial by trial
-# 
-# 
-# all_clean_test <- response_window_clean_test %>%
-#   mutate(target = targetnovel) %>%
-#   full_join(response_window_clean_test2) %>%
-#   left_join(edu.categories)
-# 
-# # Some hoops due to eyetracking R
-# all_clean_test_colnames <- colnames(all_clean_test)
-# mostattributes(all_clean_test) <- attributes(response_window_clean_test)
-# colnames(all_clean_test) <- all_clean_test_colnames
-# 
-# 
-# 
-# response_window_agg_by_trial_test_all <- make_time_window_data(all_clean_test, 
-#                                                              aois = c('target'), 
-#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "lang.mix", "edu.years"),
-#                                                          #    summarize_by = c("id"),
-#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-#   mutate(AOI = as.factor(AOI)) %>%
-#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-#   mutate(population = as.factor(population))
-
-```
-
-```{r}
-
-# # Combined training dataframe - by participant
-# 
-# response_window_agg_by_sub_training <- make_time_window_data(all_clean_training, 
-#                                                              aois = c('target'), 
-#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
-#                                                              summarize_by = c("id"),
-#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-#   mutate(AOI = as.factor(AOI)) %>%
-#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-#   mutate(population = as.factor(population)) %>%
-#   mutate(sentence.type = fct_rev(sentence.type))
-# ```
-
-
-#```{r}
-
-# Combined test dataframe - by participant
-
-# response_window_agg_by_sub_test <- make_time_window_data(all_clean_test, 
-#                                                              aois = c('target'), 
-#                                                              predictor_columns=c("sentence.type", "carrier.dominant", "population", "vocab.dom", "vocab.nondom", "vocab.total", "lang.mix", "edu.years"),
-#                                                              summarize_by = c("id"),
-#                                                              other_dv_columns = c("PupilLeft", "PupilRight")) %>%  
-#   mutate(AOI = as.factor(AOI)) %>%
-#   mutate(familiarity = as.factor(recode(AOI, distractorfamiliar = "familiar", targetfamiliar = "familiar", distractornovel = "novel", targetnovel = "novel"))) %>%
-#   mutate(target.type = as.factor(recode(AOI, distractorfamiliar = "distractor", targetfamiliar = "target", distractornovel = "distractor", targetnovel = "target"))) %>%
-#   mutate(population = as.factor(population))
-
-```
-
 
 
 
